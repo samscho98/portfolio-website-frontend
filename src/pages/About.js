@@ -13,7 +13,7 @@ const About = () => {
               {/* Placeholder for profile image */}
               <div className="h-48 w-full md:w-48 bg-gray-200 flex items-center justify-center">
                 <img 
-                  src="/images/profile.jpg" 
+                  src="/images/profile.JPG" 
                   alt="Profile picture" 
                   className="h-24 w-24 rounded-full object-cover"
                 />
