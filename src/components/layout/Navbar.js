@@ -106,7 +106,7 @@ const Navbar = () => {
           <div className="flex items-center">
             <Link to="/" className="flex-shrink-0 flex items-center" onClick={closeMenu}>
               <img 
-                src="/logo.png" 
+                src="/Logo.png" 
                 alt="Schonenberg.dev Logo" 
                 style={styles.logo} 
                 className="transition-opacity duration-300"
