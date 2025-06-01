@@ -1,8 +1,9 @@
-// src/pages/ProjectDetail.js
+// src/pages/ProjectDetail.js - Updated with localization support
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
 import { projectsApi } from '../services/api';
+import { useLocalization } from '../context/LocalizationContext';
 
 const ProjectDetail = () => {
   const { slug } = useParams();
@@ -10,12 +11,13 @@ const ProjectDetail = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [imageError, setImageError] = useState(false);
+  const { currentLanguage } = useLocalization();
   
   useEffect(() => {
     const fetchProject = async () => {
       setLoading(true);
       try {
-        const data = await projectsApi.getBySlug(slug);
+        const data = await projectsApi.getBySlug(slug, currentLanguage);
         setProject(data);
       } catch (err) {
         console.error('Error fetching project:', err);
@@ -35,9 +37,10 @@ const ProjectDetail = () => {
             slug: "ai-file-organizer",
             tags: ["Python", "Flask"],
             description: "Organizes codebases for Claude AI analysis.",
-            github: "https://github.com/samscho98/ai-organizer",
-            private: false,
-            featured: true,
+            github_url: "https://github.com/samscho98/ai-organizer",
+            live_url: null,
+            is_private: false,
+            is_featured: true,
             image_url: "/images/projects/ai-file-organizer.jpg",
             content: "# AI File Organizer\n\nThis project helps developers organize their codebases for AI analysis. It automatically scans through your project directories, identifies key components, and generates a structured representation that makes it easier for AI assistants to understand your codebase.\n\n## Features\n\n- Automatic file organization\n- Code structure analysis\n- Intelligent categorization\n- Integration with Claude AI\n\n## Technical Details\n\nBuilt with Python and Flask, the application uses advanced text processing algorithms to parse and organize code files."
           },
@@ -47,9 +50,10 @@ const ProjectDetail = () => {
             slug: "ecommerce-dashboard",
             tags: ["React", "Node.js", "MongoDB"],
             description: "Analytics dashboard for online retail stores.",
-            github: "https://github.com/samscho98/ecommerce-dashboard",
-            private: false,
-            featured: true,
+            github_url: "https://github.com/samscho98/ecommerce-dashboard",
+            live_url: "https://ecommerce-dashboard-demo.com",
+            is_private: false,
+            is_featured: true,
             image_url: "/images/projects/ecommerce-dashboard.jpg",
             content: "# E-Commerce Dashboard\n\nA comprehensive analytics solution for online retail businesses. This dashboard provides real-time insights into sales, customer behavior, and inventory management.\n\n## Features\n\n- Real-time sales tracking\n- Customer behavior analysis\n- Inventory management\n- Customizable reports\n\n## Technical Details\n\nBuilt with a React frontend, Node.js backend, and MongoDB for data storage. Uses Chart.js for data visualization."
           },
@@ -59,11 +63,12 @@ const ProjectDetail = () => {
             slug: "portfolio-website",
             tags: ["React", "Flask", "Tailwind CSS"],
             description: "My personal portfolio website with dark mode support.",
-            github: "https://github.com/samscho98/portfolio-website",
-            private: false,
-            featured: true,
+            github_url: "https://github.com/samscho98/portfolio-website",
+            live_url: "https://portfolio.schonenberg.dev",
+            is_private: false,
+            is_featured: true,
             image_url: "/images/projects/portfolio-website.jpg",
-            content: "# Portfolio Website\n\nThis project is my personal portfolio website, designed to showcase my work and skills as a developer. It features a clean, responsive design with dark mode support.\n\n## Features\n\n- Responsive Design\n- Dark Mode Support\n- Project Showcase\n- Contact Form\n\n## Technical Details\n\nThe portfolio uses React for the frontend and Flask for the backend API. The site is deployed on Render.com."
+            content: "# Portfolio Website\n\nThis project is my personal portfolio website, designed to showcase my work and skills as a developer. It features a clean, responsive design with dark mode support.\n\n## Features\n\n- Responsive Design\n- Dark Mode Support\n- Project Showcase\n- Contact Form\n- Multi-language Support\n\n## Technical Details\n\nThe portfolio uses React for the frontend and Flask for the backend API. The site is deployed on Render.com with internationalization support."
           },
           {
             id: 4,
@@ -71,9 +76,10 @@ const ProjectDetail = () => {
             slug: "task-management-api",
             tags: ["Python", "Flask", "PostgreSQL"],
             description: "RESTful API for task management applications.",
-            github: "https://github.com/samscho98/task-api",
-            private: false,
-            featured: false,
+            github_url: "https://github.com/samscho98/task-api",
+            live_url: null,
+            is_private: false,
+            is_featured: false,
             image_url: "/images/projects/task-api.jpg",
             content: "# Task Management API\n\nA robust RESTful API built for task management applications, providing endpoints for task creation, organization, assignment, and team collaboration.\n\n## Features\n\n- User Authentication\n- Task Management\n- Task Organization\n- Team Collaboration\n\n## Technical Details\n\nBuilt with Python Flask and PostgreSQL, this API follows RESTful principles and incorporates modern authentication practices."
           },
@@ -83,8 +89,10 @@ const ProjectDetail = () => {
             slug: "client-crm",
             tags: ["React", "PostgreSQL", "Express"],
             description: "Custom CRM solution for a marketing agency.",
-            private: true,
-            featured: false,
+            github_url: null,
+            live_url: null,
+            is_private: true,
+            is_featured: false,
             image_url: "/images/projects/client-crm.jpg",
             content: "# Client CRM System\n\nA private project developed for a marketing agency to manage their client relationships, campaigns, and analytics in one place.\n\n*This is a private client project — detailed write-up available upon request.*\n\n## My Contribution\n\nI designed and implemented the full-stack solution, including:\n\n- Client database architecture\n- Campaign management tools\n- Reporting and analytics dashboard\n- Integration with existing marketing tools\n\n## Technologies Used\n\nReact, PostgreSQL, Express, and various marketing APIs for integration purposes."
           }
@@ -104,7 +112,7 @@ const ProjectDetail = () => {
     };
     
     fetchProject();
-  }, [slug]);
+  }, [slug, currentLanguage]); // Re-fetch when language changes
   
   // Handle image loading errors
   const handleImageError = () => {
@@ -208,16 +216,29 @@ const ProjectDetail = () => {
           
           <p className="text-gray-700 dark:text-gray-300 mb-6 text-lg">{project.description}</p>
           
-          {!project.private && project.github && (
-            <a 
-              href={project.github} 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="mb-6 inline-block bg-gray-800 dark:bg-gray-900 hover:bg-gray-900 dark:hover:bg-gray-800 text-white px-4 py-2 rounded"
-            >
-              View on GitHub
-            </a>
-          )}
+          <div className="mb-6 flex space-x-4">
+            {!project.is_private && project.github_url && (
+              <a 
+                href={project.github_url} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="inline-block bg-gray-800 dark:bg-gray-900 hover:bg-gray-900 dark:hover:bg-gray-800 text-white px-4 py-2 rounded transition-colors"
+              >
+                View on GitHub
+              </a>
+            )}
+            
+            {project.live_url && (
+              <a 
+                href={project.live_url} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="inline-block bg-blue-600 dark:bg-blue-700 hover:bg-blue-700 dark:hover:bg-blue-600 text-white px-4 py-2 rounded transition-colors"
+              >
+                Live Demo
+              </a>
+            )}
+          </div>
           
           <div className="prose dark:prose-invert max-w-none mt-6">
             {project.content ? (

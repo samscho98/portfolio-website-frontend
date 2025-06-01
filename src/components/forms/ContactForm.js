@@ -1,12 +1,28 @@
-// src/components/forms/ContactForm.js
-import React, { useState } from 'react';
-import { contactApi } from '../../services/api';
+// src/components/forms/ContactForm.js - Updated with enhanced fields
+import React, { useState, useEffect } from 'react';
+import { contactApi, countriesApi } from '../../services/api';
 
 const ContactForm = () => {
+  const [countries, setCountries] = useState([]);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    message: ''
+    company: '',
+    phone: '',
+    project_type: '',
+    budget_range: '',
+    timeline: '',
+    message: '',
+    referral_source: '',
+    address: {
+      address_line_1: '',
+      address_line_2: '',
+      city: '',
+      state_province: '',
+      postal_code: '',
+      country_code: '',
+      country_name: ''
+    }
   });
   
   const [formStatus, setFormStatus] = useState({
@@ -15,13 +31,53 @@ const ContactForm = () => {
     isError: false,
     errorMessage: ''
   });
+
+  const [showAddressFields, setShowAddressFields] = useState(false);
+
+  // Load countries on mount
+  useEffect(() => {
+    const loadCountries = async () => {
+      try {
+        const countriesData = await countriesApi.getAll();
+        setCountries(countriesData);
+      } catch (error) {
+        console.error('Failed to load countries:', error);
+        // Fallback countries
+        setCountries([
+          { code: 'US', name: 'United States', postal_code_required: true, state_required: true, state_label: 'State' },
+          { code: 'DE', name: 'Germany', postal_code_required: true, state_required: false, state_label: 'State' },
+          { code: 'NL', name: 'Netherlands', postal_code_required: true, state_required: false, state_label: 'Province' },
+          { code: 'FR', name: 'France', postal_code_required: true, state_required: false, state_label: 'Region' },
+          { code: 'GB', name: 'United Kingdom', postal_code_required: true, state_required: false, state_label: 'County' },
+        ]);
+      }
+    };
+
+    loadCountries();
+  }, []);
   
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prevState => ({
-      ...prevState,
-      [name]: value
-    }));
+    
+    if (name.startsWith('address.')) {
+      const addressField = name.split('.')[1];
+      setFormData(prevState => ({
+        ...prevState,
+        address: {
+          ...prevState.address,
+          [addressField]: value,
+          // Update country name when country code changes
+          ...(addressField === 'country_code' && {
+            country_name: countries.find(c => c.code === value)?.name || ''
+          })
+        }
+      }));
+    } else {
+      setFormData(prevState => ({
+        ...prevState,
+        [name]: value
+      }));
+    }
   };
   
   const validateForm = () => {
@@ -86,14 +142,36 @@ const ContactForm = () => {
     }
     
     try {
+      // Prepare form data, only include address if any address field is filled
+      const hasAddressData = Object.values(formData.address).some(value => value.trim() !== '');
+      const submitData = {
+        ...formData,
+        address: hasAddressData ? formData.address : undefined
+      };
+
       // Use the contact API service to send the message
-      await contactApi.sendMessage(formData);
+      await contactApi.sendMessage(submitData);
       
       // Clear the form on success
       setFormData({
         name: '',
         email: '',
-        message: ''
+        company: '',
+        phone: '',
+        project_type: '',
+        budget_range: '',
+        timeline: '',
+        message: '',
+        referral_source: '',
+        address: {
+          address_line_1: '',
+          address_line_2: '',
+          city: '',
+          state_province: '',
+          postal_code: '',
+          country_code: '',
+          country_name: ''
+        }
       });
       
       setFormStatus({
@@ -120,7 +198,22 @@ const ContactForm = () => {
         setFormData({
           name: '',
           email: '',
-          message: ''
+          company: '',
+          phone: '',
+          project_type: '',
+          budget_range: '',
+          timeline: '',
+          message: '',
+          referral_source: '',
+          address: {
+            address_line_1: '',
+            address_line_2: '',
+            city: '',
+            state_province: '',
+            postal_code: '',
+            country_code: '',
+            country_name: ''
+          }
         });
         
         setFormStatus({
@@ -149,6 +242,44 @@ const ContactForm = () => {
       });
     }
   };
+
+  const projectTypes = [
+    'Website Development',
+    'Web Application',
+    'API Development',
+    'AI/Automation Tool',
+    'Database Design',
+    'Other'
+  ];
+
+  const budgetRanges = [
+    'Under $1,000',
+    '$1,000 - $3,000',
+    '$3,000 - $5,000',
+    '$5,000 - $10,000',
+    '$10,000+',
+    'To be discussed'
+  ];
+
+  const timelines = [
+    'Less than 1 month',
+    '1-2 months',
+    '2-3 months',
+    '3-6 months',
+    '6+ months',
+    'Flexible'
+  ];
+
+  const referralSources = [
+    'Google Search',
+    'LinkedIn',
+    'GitHub',
+    'Referral from colleague',
+    'Social Media',
+    'Other'
+  ];
+
+  const selectedCountry = countries.find(c => c.code === formData.address.country_code);
   
   return (
     <div className="bg-white dark:bg-dark-800 rounded-lg shadow-md p-8 w-full">
@@ -173,47 +304,148 @@ const ContactForm = () => {
       )}
       
       <form onSubmit={handleSubmit} className="space-y-6">
-        <div>
-          <label 
-            htmlFor="name" 
-            className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-          >
-            Name*
-          </label>
-          <input 
-            type="text" 
-            id="name" 
-            name="name" 
-            value={formData.name}
-            onChange={handleChange}
-            className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-white dark:bg-dark-700 text-gray-900 dark:text-gray-100 transition-colors"
-            required
-          />
+        {/* Basic Information */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              Name*
+            </label>
+            <input 
+              type="text" 
+              id="name" 
+              name="name" 
+              value={formData.name}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-white dark:bg-dark-700 text-gray-900 dark:text-gray-100 transition-colors"
+              required
+            />
+          </div>
+          
+          <div>
+            <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              Email*
+            </label>
+            <input 
+              type="email" 
+              id="email" 
+              name="email" 
+              value={formData.email}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-white dark:bg-dark-700 text-gray-900 dark:text-gray-100 transition-colors"
+              required
+            />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label htmlFor="company" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              Company
+            </label>
+            <input 
+              type="text" 
+              id="company" 
+              name="company" 
+              value={formData.company}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-white dark:bg-dark-700 text-gray-900 dark:text-gray-100 transition-colors"
+            />
+          </div>
+          
+          <div>
+            <label htmlFor="phone" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              Phone
+            </label>
+            <input 
+              type="tel" 
+              id="phone" 
+              name="phone" 
+              value={formData.phone}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-white dark:bg-dark-700 text-gray-900 dark:text-gray-100 transition-colors"
+            />
+          </div>
+        </div>
+
+        {/* Project Information */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label htmlFor="project_type" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              Project Type
+            </label>
+            <select 
+              id="project_type" 
+              name="project_type" 
+              value={formData.project_type}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-white dark:bg-dark-700 text-gray-900 dark:text-gray-100 transition-colors"
+            >
+              <option value="">Select project type</option>
+              {projectTypes.map(type => (
+                <option key={type} value={type}>{type}</option>
+              ))}
+            </select>
+          </div>
+          
+          <div>
+            <label htmlFor="budget_range" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              Budget Range
+            </label>
+            <select 
+              id="budget_range" 
+              name="budget_range" 
+              value={formData.budget_range}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-white dark:bg-dark-700 text-gray-900 dark:text-gray-100 transition-colors"
+            >
+              <option value="">Select budget range</option>
+              {budgetRanges.map(range => (
+                <option key={range} value={range}>{range}</option>
+              ))}
+            </select>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label htmlFor="timeline" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              Timeline
+            </label>
+            <select 
+              id="timeline" 
+              name="timeline" 
+              value={formData.timeline}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-white dark:bg-dark-700 text-gray-900 dark:text-gray-100 transition-colors"
+            >
+              <option value="">Select timeline</option>
+              {timelines.map(timeline => (
+                <option key={timeline} value={timeline}>{timeline}</option>
+              ))}
+            </select>
+          </div>
+          
+          <div>
+            <label htmlFor="referral_source" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              How did you find me?
+            </label>
+            <select 
+              id="referral_source" 
+              name="referral_source" 
+              value={formData.referral_source}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-white dark:bg-dark-700 text-gray-900 dark:text-gray-100 transition-colors"
+            >
+              <option value="">Select source</option>
+              {referralSources.map(source => (
+                <option key={source} value={source}>{source}</option>
+              ))}
+            </select>
+          </div>
         </div>
         
         <div>
-          <label 
-            htmlFor="email" 
-            className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-          >
-            Email*
-          </label>
-          <input 
-            type="email" 
-            id="email" 
-            name="email" 
-            value={formData.email}
-            onChange={handleChange}
-            className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-white dark:bg-dark-700 text-gray-900 dark:text-gray-100 transition-colors"
-            required
-          />
-        </div>
-        
-        <div>
-          <label 
-            htmlFor="message" 
-            className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-          >
+          <label htmlFor="message" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
             Message*
           </label>
           <textarea 
@@ -226,10 +458,120 @@ const ContactForm = () => {
             required
           ></textarea>
         </div>
+
+        {/* Optional Address Section */}
+        <div className="border-t border-gray-200 dark:border-gray-700 pt-6">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100">Address (Optional)</h3>
+            <button
+              type="button"
+              onClick={() => setShowAddressFields(!showAddressFields)}
+              className="text-primary-600 dark:text-primary-400 hover:text-primary-800 dark:hover:text-primary-300 text-sm font-medium"
+            >
+              {showAddressFields ? 'Hide Address Fields' : 'Add Address Information'}
+            </button>
+          </div>
+
+          {showAddressFields && (
+            <div className="space-y-4">
+              <div>
+                <label htmlFor="address.address_line_1" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  Address Line 1
+                </label>
+                <input
+                  type="text"
+                  id="address.address_line_1"
+                  name="address.address_line_1"
+                  value={formData.address.address_line_1}
+                  onChange={handleChange}
+                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-white dark:bg-dark-700 text-gray-900 dark:text-gray-100 transition-colors"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="address.address_line_2" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  Address Line 2
+                </label>
+                <input
+                  type="text"
+                  id="address.address_line_2"
+                  name="address.address_line_2"
+                  value={formData.address.address_line_2}
+                  onChange={handleChange}
+                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-white dark:bg-dark-700 text-gray-900 dark:text-gray-100 transition-colors"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <label htmlFor="address.city" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                    City
+                  </label>
+                  <input
+                    type="text"
+                    id="address.city"
+                    name="address.city"
+                    value={formData.address.city}
+                    onChange={handleChange}
+                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-white dark:bg-dark-700 text-gray-900 dark:text-gray-100 transition-colors"
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="address.state_province" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                    {selectedCountry?.state_label || 'State/Province'}
+                  </label>
+                  <input
+                    type="text"
+                    id="address.state_province"
+                    name="address.state_province"
+                    value={formData.address.state_province}
+                    onChange={handleChange}
+                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-white dark:bg-dark-700 text-gray-900 dark:text-gray-100 transition-colors"
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="address.postal_code" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                    Postal Code
+                  </label>
+                  <input
+                    type="text"
+                    id="address.postal_code"
+                    name="address.postal_code"
+                    value={formData.address.postal_code}
+                    onChange={handleChange}
+                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-white dark:bg-dark-700 text-gray-900 dark:text-gray-100 transition-colors"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label htmlFor="address.country_code" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  Country
+                </label>
+                <select
+                  id="address.country_code"
+                  name="address.country_code"
+                  value={formData.address.country_code}
+                  onChange={handleChange}
+                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-white dark:bg-dark-700 text-gray-900 dark:text-gray-100 transition-colors"
+                >
+                  <option value="">Select country</option>
+                  {countries.map(country => (
+                    <option key={country.code} value={country.code}>
+                      {country.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+          )}
+        </div>
         
         <button 
           type="submit" 
-          className={`w-full bg-primary-600 dark:bg-primary-700 hover:bg-primary-700 dark:hover:bg-primary-600 text-white font-medium py-2 px-4 rounded-md transition-colors ${
+          className={`w-full bg-primary-600 dark:bg-primary-700 hover:bg-primary-700 dark:hover:bg-primary-600 text-white font-medium py-3 px-4 rounded-md transition-colors ${
             formStatus.isSubmitting ? 'opacity-70 cursor-not-allowed' : ''
           }`}
           disabled={formStatus.isSubmitting}

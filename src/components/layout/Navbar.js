@@ -1,13 +1,18 @@
+// src/components/layout/Navbar.js - Updated with language switcher and localization
+
 import React, { useState, useEffect } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { useTheme } from '../../context/ThemeContext';
+import { useLocalization } from '../../context/LocalizationContext';
 import ThemeToggle from './ThemeToggle';
+import LanguageSwitcher from './LanguageSwitcher';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const location = useLocation();
   const { theme } = useTheme();
+  const { t } = useLocalization();
   
   const styles = {
     nav: {
@@ -126,16 +131,25 @@ const Navbar = () => {
             <NavLink to="/projects" className={getNavLinkClass}>
               Projects
             </NavLink>
+            <NavLink to="/services" className={getNavLinkClass}>
+              Services
+            </NavLink>
             <NavLink to="/contact" className={getNavLinkClass}>
               Contact
             </NavLink>
             
-            {/* Add Theme Toggle */}
+            {/* Language Switcher */}
+            <LanguageSwitcher />
+            
+            {/* Theme Toggle */}
             <ThemeToggle />
           </div>
           
           {/* Mobile menu button */}
           <div className="flex md:hidden items-center space-x-2">
+            {/* Language Switcher for Mobile */}
+            <LanguageSwitcher className="scale-90" />
+            
             {/* Theme Toggle for Mobile */}
             <ThemeToggle />
             
@@ -185,7 +199,7 @@ const Navbar = () => {
 
       {/* Mobile menu */}
       <div 
-        className={`${isMenuOpen ? 'max-h-60 opacity-100' : 'max-h-0 opacity-0'} md:hidden overflow-hidden transition-all duration-300 ease-in-out`}
+        className={`${isMenuOpen ? 'max-h-80 opacity-100' : 'max-h-0 opacity-0'} md:hidden overflow-hidden transition-all duration-300 ease-in-out`}
       >
         <div className="px-4 pt-2 pb-3 space-y-1" style={styles.mobileMenu}>
           <NavLink 
@@ -209,6 +223,13 @@ const Navbar = () => {
             onClick={closeMenu}
           >
             Projects
+          </NavLink>
+          <NavLink 
+            to="/services" 
+            className={getMobileLinkClass}
+            onClick={closeMenu}
+          >
+            Services
           </NavLink>
           <NavLink 
             to="/contact" 

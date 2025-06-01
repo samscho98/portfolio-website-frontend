@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useTheme } from '../../context/ThemeContext';
 
 const ProjectCard = ({ project }) => {
-  const { id, title, slug, tags, description, github, private: isPrivate, featured, image_url } = project;
+  const { id, title, slug, tags, description, github_url, live_url, is_private, is_featured, image_url } = project;
   const { theme } = useTheme();
   const [imageError, setImageError] = useState(false);
   
@@ -100,22 +100,35 @@ const ProjectCard = ({ project }) => {
         
         <div className="flex justify-between items-center mt-auto">
           <div className="space-x-2">
-            {isPrivate ? (
+            {is_private ? (
               <span className="text-sm italic" style={{color: theme === 'dark' ? '#a3a3a3' : '#6b7280'}}>
                 Private client project — write-up available upon request.
               </span>
             ) : (
-              github && (
-                <a 
-                  href={github} 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="hover:underline transition-colors"
-                  style={linkStyle}
-                >
-                  GitHub Repository
-                </a>
-              )
+              <div className="flex space-x-2">
+                {github_url && (
+                  <a 
+                    href={github_url} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="hover:underline transition-colors text-sm"
+                    style={linkStyle}
+                  >
+                    GitHub
+                  </a>
+                )}
+                {live_url && (
+                  <a 
+                    href={live_url} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="hover:underline transition-colors text-sm"
+                    style={linkStyle}
+                  >
+                    Live Demo
+                  </a>
+                )}
+              </div>
             )}
           </div>
           

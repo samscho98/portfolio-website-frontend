@@ -1,7 +1,8 @@
-// src/pages/Home.js
+// src/pages/Home.js - Updated with localization support
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useTheme } from '../context/ThemeContext';
+import { useLocalization } from '../context/LocalizationContext';
 import ProjectCard from '../components/projects/ProjectCard';
 import { projectsApi } from '../services/api';
 
@@ -9,6 +10,7 @@ const Home = () => {
   const [featuredProjects, setFeaturedProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const { theme } = useTheme();
+  const { currentLanguage } = useLocalization();
   
   // Dark mode styles
   const styles = {
@@ -42,8 +44,8 @@ const Home = () => {
     const fetchFeaturedProjects = async () => {
       setLoading(true);
       try {
-        // Try to fetch from the API
-        const data = await projectsApi.getFeatured();
+        // Try to fetch from the API with current language
+        const data = await projectsApi.getFeatured(currentLanguage);
         setFeaturedProjects(data);
       } catch (err) {
         console.error('Error fetching featured projects:', err);
@@ -56,9 +58,9 @@ const Home = () => {
             slug: "ai-file-organizer",
             tags: ["Python", "Flask"],
             description: "Organizes codebases for Claude AI analysis.",
-            github: "https://github.com/samscho98/ai-organizer",
-            private: false,
-            featured: true
+            github_url: "https://github.com/samscho98/ai-organizer",
+            is_private: false,
+            is_featured: true
           },
           {
             id: 2,
@@ -66,9 +68,9 @@ const Home = () => {
             slug: "ecommerce-dashboard",
             tags: ["React", "Node.js", "MongoDB"],
             description: "Analytics dashboard for online retail stores.",
-            github: "https://github.com/samscho98/ecommerce-dashboard",
-            private: false,
-            featured: true
+            github_url: "https://github.com/samscho98/ecommerce-dashboard",
+            is_private: false,
+            is_featured: true
           },
           {
             id: 3,
@@ -76,9 +78,9 @@ const Home = () => {
             slug: "portfolio-website",
             tags: ["React", "Flask", "Tailwind CSS"],
             description: "My personal portfolio website with dark mode support.",
-            github: "https://github.com/samscho98/portfolio-website",
-            private: false,
-            featured: true
+            github_url: "https://github.com/samscho98/portfolio-website",
+            is_private: false,
+            is_featured: true
           }
         ]);
       } finally {
@@ -87,7 +89,7 @@ const Home = () => {
     };
     
     fetchFeaturedProjects();
-  }, []);
+  }, [currentLanguage]); // Re-fetch when language changes
   
   return (
     <div className="container mx-auto px-4 py-12" style={styles.container}>

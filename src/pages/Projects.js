@@ -1,12 +1,14 @@
-// src/pages/Projects.js
+// src/pages/Projects.js - Updated with localization support
 import React, { useState, useEffect } from 'react';
 import ProjectCard from '../components/projects/ProjectCard';
 import { projectsApi } from '../services/api';
+import { useLocalization } from '../context/LocalizationContext';
 
 const Projects = () => {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const { currentLanguage } = useLocalization();
   
   // Filter states
   const [activeFilter, setActiveFilter] = useState('all');
@@ -15,7 +17,7 @@ const Projects = () => {
     const fetchProjects = async () => {
       setLoading(true);
       try {
-        const data = await projectsApi.getAll();
+        const data = await projectsApi.getAll(currentLanguage);
         setProjects(data);
       } catch (err) {
         console.error('Error fetching projects:', err);
@@ -29,9 +31,9 @@ const Projects = () => {
             slug: "ai-file-organizer",
             tags: ["Python", "Flask"],
             description: "Organizes codebases for Claude AI analysis.",
-            github: "https://github.com/samscho98/ai-organizer",
-            private: false,
-            featured: true
+            github_url: "https://github.com/samscho98/ai-organizer",
+            is_private: false,
+            is_featured: true
           },
           {
             id: 2,
@@ -39,9 +41,9 @@ const Projects = () => {
             slug: "ecommerce-dashboard",
             tags: ["React", "Node.js", "MongoDB"],
             description: "Analytics dashboard for online retail stores.",
-            github: "https://github.com/samscho98/ecommerce-dashboard",
-            private: false,
-            featured: true
+            github_url: "https://github.com/samscho98/ecommerce-dashboard",
+            is_private: false,
+            is_featured: true
           },
           {
             id: 3,
@@ -49,9 +51,9 @@ const Projects = () => {
             slug: "portfolio-website",
             tags: ["React", "Flask", "Tailwind CSS"],
             description: "My personal portfolio website with dark mode support.",
-            github: "https://github.com/samscho98/portfolio-website",
-            private: false,
-            featured: true
+            github_url: "https://github.com/samscho98/portfolio-website",
+            is_private: false,
+            is_featured: true
           },
           {
             id: 4,
@@ -59,9 +61,9 @@ const Projects = () => {
             slug: "task-management-api",
             tags: ["Python", "Flask", "PostgreSQL"],
             description: "RESTful API for task management applications.",
-            github: "https://github.com/samscho98/task-api",
-            private: false,
-            featured: false
+            github_url: "https://github.com/samscho98/task-api",
+            is_private: false,
+            is_featured: false
           },
           {
             id: 5,
@@ -69,8 +71,8 @@ const Projects = () => {
             slug: "client-crm",
             tags: ["React", "PostgreSQL", "Express"],
             description: "Custom CRM solution for a marketing agency.",
-            private: true,
-            featured: false
+            is_private: true,
+            is_featured: false
           }
         ]);
       } finally {
@@ -79,13 +81,13 @@ const Projects = () => {
     };
     
     fetchProjects();
-  }, []);
+  }, [currentLanguage]); // Re-fetch when language changes
   
   const filteredProjects = activeFilter === 'all' 
     ? projects 
     : activeFilter === 'public' 
-      ? projects.filter(project => !project.private)
-      : projects.filter(project => project.private);
+      ? projects.filter(project => !project.is_private)
+      : projects.filter(project => project.is_private);
   
   return (
     <div className="container mx-auto px-4 py-8">

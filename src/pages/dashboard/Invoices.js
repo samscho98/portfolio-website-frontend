@@ -1,1 +1,0 @@
-// Invoices page component
