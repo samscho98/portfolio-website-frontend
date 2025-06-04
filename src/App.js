@@ -1,51 +1,26 @@
-// src/App.js - Updated without admin dashboard components
-
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-
-// Context Providers
-import { ThemeProvider } from './context/ThemeContext';
-import { LocalizationProvider } from './context/LocalizationContext';
-
-// Layout Components
-import Navbar from './components/layout/Navbar';
-import Footer from './components/layout/Footer';
-
-// Pages
-import Home from './pages/Home';
-import About from './pages/About';
-import Projects from './pages/Projects';
-import ProjectDetail from './pages/ProjectDetail';
-import Contact from './pages/Contact';
-import Services from './pages/Services';
-
-// CSS
+import { I18nProvider } from './contexts/I18nContext';
+import Header from './components/Header/Header';
+import HeroSection from './components/HeroSection/HeroSection';
+import FeaturedProjects from './components/FeaturedProjects/FeaturedProjects';
+import AboutAndBlog from './components/AboutAndBlog/AboutAndBlog';
+import Footer from './components/Footer/Footer';
 import './App.css';
 
-function App() {
+const App = () => {
   return (
-    <ThemeProvider>
-      <LocalizationProvider>
-        <Router>
-          <div className="flex flex-col min-h-screen bg-gray-50 dark:bg-dark-900 text-gray-900 dark:text-gray-100 transition-colors duration-300">
-            <Navbar />
-            <main className="flex-grow">
-              <Routes>
-                {/* Main Routes */}
-                <Route path="/" element={<Home />} />
-                <Route path="/about" element={<About />} />
-                <Route path="/projects" element={<Projects />} />
-                <Route path="/project/:slug" element={<ProjectDetail />} />
-                <Route path="/services" element={<Services />} />
-                <Route path="/contact" element={<Contact />} />
-              </Routes>
-            </main>
-            <Footer />
-          </div>
-        </Router>
-      </LocalizationProvider>
-    </ThemeProvider>
+    <I18nProvider>
+      <div className="App">
+        <Header />
+        <main>
+          <HeroSection />
+          <FeaturedProjects />
+          <AboutAndBlog />
+        </main>
+        <Footer />
+      </div>
+    </I18nProvider>
   );
-}
+};
 
 export default App;

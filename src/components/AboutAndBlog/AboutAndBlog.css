@@ -1,0 +1,57 @@
+.about-and-blog-section {
+  padding: 5rem 2rem;
+  background: #0f172a;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.about-blog-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 3rem;
+  align-items: start;
+}
+
+.about-column {
+  width: 100%;
+}
+
+.blog-column {
+  width: 100%;
+}
+
+/* Tablet Responsive */
+@media (max-width: 1024px) {
+  .about-and-blog-section {
+    padding: 4rem 1.5rem;
+  }
+  
+  .about-blog-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+  }
+}
+
+/* Mobile Responsive - Stack vertically */
+@media (max-width: 768px) {
+  .about-and-blog-section {
+    padding: 3rem 1rem;
+  }
+  
+  .about-blog-grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  
+  /* Mobile order: About Me first, then Blog */
+  .about-column {
+    order: 1;
+  }
+  
+  .blog-column {
+    order: 2;
+  }
+}

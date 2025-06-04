@@ -1,0 +1,147 @@
+.about-me {
+  background: #1e293b;
+  color: white;
+  padding: 2rem;
+  border-radius: 12px;
+  border: 1px solid #334155;
+  height: fit-content;
+}
+
+.about-me h2 {
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  color: white;
+  font-weight: 600;
+}
+
+.professional-title {
+  font-size: 1.3rem;
+  color: #7c9ef8;
+  margin-bottom: 1rem;
+  font-weight: 500;
+}
+
+.bio {
+  font-size: 1.1rem;
+  line-height: 1.7;
+  color: #cbd5e1;
+  margin-bottom: 1.5rem;
+}
+
+.mission-section {
+  margin-bottom: 1.5rem;
+}
+
+.mission-section h4 {
+  font-size: 1.1rem;
+  color: white;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.mission-text {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #cbd5e1;
+  font-style: italic;
+}
+
+.skills-section {
+  margin-bottom: 2rem;
+}
+
+.skills-section h4 {
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+  color: white;
+  font-weight: 500;
+}
+
+.skills-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.skill-tag {
+  padding: 0.4rem 1rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.cta-button {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 0.75rem 2rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.cta-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+}
+
+/* Loading State */
+.about-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+}
+
+.loading-placeholder-about {
+  width: 100%;
+  height: 200px;
+  background: linear-gradient(90deg, #1e293b 25%, #334155 50%, #1e293b 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+  border-radius: 8px;
+}
+
+@keyframes loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+.error-message {
+  color: #ef4444;
+  text-align: center;
+  font-size: 1.1rem;
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+  .about-me {
+    padding: 1.5rem;
+  }
+  
+  .about-me h2 {
+    font-size: 1.75rem;
+  }
+  
+  .professional-title {
+    font-size: 1.2rem;
+  }
+  
+  .bio {
+    font-size: 1rem;
+  }
+  
+  .cta-button {
+    width: 100%;
+    text-align: center;
+  }
+}
