@@ -8,10 +8,10 @@ const Navigation = () => {
 
   const navItems = [
     { key: 'home', href: '#' },
-    { key: 'about', href: '#' },
-    { key: 'blog', href: '#' },
     { key: 'projects', href: '#' },
-    { key: 'pricing', href: '#' }
+    { key: 'pricing', href: '#' },
+    { key: 'contact', href: '#' },
+    { key: 'blog', href: '#' }
   ];
 
   const toggleMenu = () => {

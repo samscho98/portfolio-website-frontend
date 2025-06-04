@@ -4,8 +4,8 @@
   min-height: 80vh;
   display: flex;
   align-items: center;
-  padding: 4rem 2rem 2rem 2rem;
-  background: linear-gradient(135deg, #16213e 0%, #0f172a 100%);
+  padding: 6rem 2rem 2rem 2rem;
+  background: radial-gradient(ellipse at top left, #1e3a5f 0%, #16213e 50%, #0f172a 100%);
   color: white;
   position: relative;
   overflow: hidden;
@@ -194,7 +194,7 @@
 @media (max-width: 1024px) {
   .hero-section {
     min-height: 70vh;
-    padding: 3rem 1.5rem 2rem 1.5rem;
+    padding: 5rem 1.5rem 2rem 1.5rem;
   }
   
   .hero-container {
@@ -218,43 +218,76 @@
 /* Mobile - Stack vertically with text first */
 @media (max-width: 768px) {
   .hero-section {
-    min-height: 80vh;
-    padding: 2rem 1rem;
+    min-height: 100vh;
+    padding: 6rem 0 0 0;
     text-align: center;
+    display: flex;
+    flex-direction: column;
   }
   
   .hero-container {
-    grid-template-columns: 1fr;
-    grid-template-rows: auto auto;
-    gap: 2rem;
-    min-height: auto;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    gap: 0;
+    min-height: 0;
+    height: 100%;
+  }
+  
+  .hero-container {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    gap: 0;
+    min-height: 0;
+    height: 100%;
   }
   
   .hero-content {
     padding: 0 1rem;
-    order: 1;
+    flex-shrink: 0;
+    flex-grow: 0;
     max-width: 100%;
+    min-height: auto;
+    height: auto;
+    max-height: 40vh;
   }
   
   .hero-title {
     font-size: 2.2rem;
-    margin-bottom: 1.5rem;
+    margin-bottom: 0.5rem;
+    line-height: 1.1;
   }
   
   .hero-description {
     max-width: 100%;
     margin: 0 auto;
     font-size: 1rem;
+    line-height: 1.4;
   }
   
   .hero-image {
-    order: 2;
-    padding: 1rem 2rem;
+    flex: 1;
+    flex-grow: 1;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    overflow: hidden;
+    min-height: 60vh;
+    max-height: none;
   }
   
   .profile-image {
-    max-width: 300px;
-    border-radius: 12px;
+    max-width: 500px;
+    min-width: 450px;
+    border-radius: 12px 12px 0 0;
+    width: 130%;
+    height: auto;
+    box-shadow: none;
+    margin: 0;
+    display: block;
   }
   
   .loading-placeholder-image {
@@ -265,6 +298,10 @@
 
 /* Extra small mobile */
 @media (max-width: 480px) {
+  .hero-section {
+    min-height: 100vh;
+  }
+  
   .hero-title {
     font-size: 1.8rem;
   }
@@ -274,10 +311,11 @@
   }
   
   .profile-image {
-    max-width: 250px;
+    max-width: 320px;
+    border-radius: 12px 12px 0 0;
   }
   
   .hero-image {
-    padding: 1rem;
+    overflow: hidden;
   }
 }
