@@ -406,15 +406,23 @@ const BlogPost = ({ slug }) => {
           </aside>
         </div>
 
-        {/* Comments Section Placeholder */}
-        <section className="comments-section">
-          <div className="comments-header">
-            <h3 className="comments-count">Comments ({article.comment_count || 0})</h3>
-          </div>
-          <div className="comments-placeholder">
-            <p>Comments system integration would go here (e.g., Disqus, custom solution)</p>
-          </div>
-        </section>
+        {article.x_post_url && (
+          <section className="x-discussion-section">
+            <div className="x-discussion-header">
+              <h3 className="x-discussion-title">Join the Discussion</h3>
+              <p className="x-discussion-subtitle">
+                What are your thoughts on this topic? Share your experiences, ask questions, 
+                or discuss best practices with the community on X.
+              </p>
+            </div>
+            <a href={article.x_post_url} target="_blank" rel="noopener noreferrer" className="x-discussion-button">
+              <svg className="x-icon" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+              </svg>
+              Discuss on X
+            </a>
+          </section>
+        )}
       </div>
     </div>
   );
