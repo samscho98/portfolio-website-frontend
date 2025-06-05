@@ -14,68 +14,26 @@
 
 .nav-link {
   text-decoration: none;
-  color: white;
-  font-weight: 500;
-  transition: color 0.2s ease;
-}
-
-.nav-link:hover {
-  color: #7c9ef8;
-}
-
-/* Burger Menu Button */
-.burger-menu {
-  display: none;
-  flex-direction: column;
-  justify-content: space-around;
-  width: 30px;
-  height: 30px;
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  padding: 0;
-}
-
-.burger-line {
-  width: 30px;
-  height: 3px;
-  background: white;
-  border-radius: 3px;
-  transition: all 0.3s ease;
-  transform-origin: 1px;
-}
-
-.burger-line.open:nth-child(1) {
-  transform: rotate(45deg);
-}
-
-.burger-line.open:nth-child(2) {
-  opacity: 0;
-}
-
-.burger-.navigation {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  position: relative;
-}
-
-/* Desktop Navigation */
-.desktop-nav {
-  display: flex;
-  list-style: none;
-  gap: 2rem;
-}
-
-.nav-link {
-  text-decoration: none;
   color: #8b9de9;
   font-weight: 500;
   transition: color 0.2s ease;
+  position: relative;
 }
 
-.nav-link:hover {
+.nav-link:hover,
+.nav-link.active {
   color: #667eea;
+}
+
+.nav-link.active::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: #667eea;
+  border-radius: 1px;
 }
 
 /* Burger Menu Button */
@@ -150,9 +108,14 @@
   border-bottom: 1px solid #f0f0f0;
 }
 
-.mobile-nav-link:hover {
+.mobile-nav-link:hover,
+.mobile-nav-link.active {
   background-color: #f8f9fa;
   color: #667eea;
+}
+
+.mobile-nav-link.active {
+  border-left: 4px solid #667eea;
 }
 
 /* Mobile Overlay */

@@ -1,3 +1,6 @@
+/* Import Google Material Icons */
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+
 .latest-blog {
   background: #1e293b;
   color: white;
@@ -93,7 +96,12 @@
 .stat {
   display: flex;
   align-items: center;
-  gap: 0.25rem;
+  gap: 0.4rem;
+}
+
+.stat .material-icons {
+  font-size: 16px;
+  color: #667eea;
 }
 
 .read-more-btn {

@@ -1,9 +1,10 @@
 .project-card {
-  background: white;
+  background: #1e293b;  /* Changed from white to dark */
   padding: 2rem;
   border-radius: 12px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border: 1px solid #334155;
 }
 
 .project-card:hover {
@@ -15,11 +16,11 @@
   font-size: 1.5rem;
   font-weight: 600;
   margin-bottom: 1rem;
-  color: #333;
+  color: white;  /* Changed from #333 to white */
 }
 
 .project-description {
-  color: #666;
+  color: #cbd5e1;  /* Changed from #666 to light gray */
   line-height: 1.6;
   margin-bottom: 1.5rem;
 }
@@ -33,6 +34,7 @@
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
+  text-decoration: none;
 }
 
 .project-link:hover {

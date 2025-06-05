@@ -1,17 +1,19 @@
 import React, { useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import { useI18n } from '../../contexts/I18nContext';
 import './Navigation.css';
 
 const Navigation = () => {
   const { t } = useI18n();
+  const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const navItems = [
-    { key: 'home', href: '#' },
-    { key: 'projects', href: '#' },
-    { key: 'pricing', href: '#' },
-    { key: 'contact', href: '#' },
-    { key: 'blog', href: '#' }
+    { key: 'home', path: '/' },
+    { key: 'projects', path: '/projects' },
+    { key: 'pricing', path: '/pricing' },
+    { key: 'contact', path: '/contact' },
+    { key: 'blog', path: '/blog' }
   ];
 
   const toggleMenu = () => {
@@ -22,15 +24,25 @@ const Navigation = () => {
     setIsMenuOpen(false);
   };
 
+  const isActivePath = (path) => {
+    if (path === '/') {
+      return location.pathname === '/';
+    }
+    return location.pathname.startsWith(path);
+  };
+
   return (
     <nav className="navigation">
       {/* Desktop Navigation */}
       <ul className="nav-list desktop-nav">
         {navItems.map(item => (
           <li key={item.key}>
-            <a href={item.href} className="nav-link">
+            <Link 
+              to={item.path} 
+              className={`nav-link ${isActivePath(item.path) ? 'active' : ''}`}
+            >
               {t(`nav.${item.key}`)}
-            </a>
+            </Link>
           </li>
         ))}
       </ul>
@@ -51,13 +63,13 @@ const Navigation = () => {
         <ul className="mobile-nav-list">
           {navItems.map(item => (
             <li key={item.key}>
-              <a 
-                href={item.href} 
-                className="mobile-nav-link"
+              <Link 
+                to={item.path}
+                className={`mobile-nav-link ${isActivePath(item.path) ? 'active' : ''}`}
                 onClick={closeMenu}
               >
                 {t(`nav.${item.key}`)}
-              </a>
+              </Link>
             </li>
           ))}
         </ul>

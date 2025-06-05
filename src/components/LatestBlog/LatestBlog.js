@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { useI18n } from '../../contexts/I18nContext';
 import './LatestBlog.css';
 
@@ -16,11 +17,22 @@ const LatestBlog = () => {
         setIsLoading(true);
         setError(null);
         
-        const data = await apiCall('/blog/featured?limit=1');
+        console.log('Fetching latest blog post...');
+        const data = await apiCall('/blog/articles?per_page=1&is_featured=true');
+        console.log('Blog response:', data);
         
-        // Handle different response structures
-        const articles = data.articles || data || [];
-        setBlogPost(articles[0] || null);
+        // Handle the API response structure
+        if (data.status === 'success' && data.articles && data.articles.length > 0) {
+          setBlogPost(data.articles[0]);
+        } else {
+          // Try to get the latest published article if no featured
+          const latestData = await apiCall('/blog/articles?per_page=1');
+          if (latestData.status === 'success' && latestData.articles && latestData.articles.length > 0) {
+            setBlogPost(latestData.articles[0]);
+          } else {
+            setBlogPost(null);
+          }
+        }
         
       } catch (err) {
         console.error('Failed to fetch latest blog post:', err);
@@ -57,6 +69,9 @@ const LatestBlog = () => {
       <div className="latest-blog">
         <h2>{t('sections.latestBlog')}</h2>
         <p className="no-blog">No blog posts available</p>
+        <Link to="/blog" className="cta-button" style={{ marginTop: '1rem' }}>
+          View All Articles
+        </Link>
       </div>
     );
   }
@@ -89,16 +104,22 @@ const LatestBlog = () => {
           <h3>{blogPost.title}</h3>
           <p>{blogPost.excerpt}</p>
           <div className="blog-stats">
-            {blogPost.view_count && (
-              <span className="stat">{blogPost.view_count} views</span>
+            {blogPost.view_count !== undefined && (
+              <span className="stat">
+                <span className="material-icons">visibility</span>
+                {blogPost.view_count}
+              </span>
             )}
-            {blogPost.like_count && (
-              <span className="stat">{blogPost.like_count} likes</span>
+            {blogPost.like_count !== undefined && (
+              <span className="stat">
+                <span className="material-icons">favorite</span>
+                {blogPost.like_count}
+              </span>
             )}
           </div>
-          <a href={`/blog/${blogPost.slug}`} className="read-more-btn">
+          <Link to={`/blog/${blogPost.slug}`} className="read-more-btn">
             {t('ui.readMore')}
-          </a>
+          </Link>
         </div>
       </article>
     </div>

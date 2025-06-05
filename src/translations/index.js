@@ -3,8 +3,10 @@ import en from './en';
 import de from './de';
 import tl from './tl';
 
-export default {
+const translations = {
   en,
   de,
   tl
 };
+
+export default translations;

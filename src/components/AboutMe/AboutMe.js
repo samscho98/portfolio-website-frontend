@@ -95,10 +95,6 @@ const AboutMe = () => {
             </div>
           </div>
         )}
-        
-        <button className="cta-button">
-          {t('ui.learnMore')}
-        </button>
       </div>
     </div>
   );
