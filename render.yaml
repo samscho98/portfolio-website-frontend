@@ -11,5 +11,8 @@ services:
       - schonenberg.dev
     routes:
       - type: rewrite
+        source: /static/*
+        destination: /static/$1
+      - type: rewrite
         source: /*
         destination: /index.html

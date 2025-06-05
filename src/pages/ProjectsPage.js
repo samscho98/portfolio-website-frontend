@@ -1,8 +1,8 @@
 import React from 'react';
-import WorkSection from '../components/WorkSection/WorkSection';
+import Projects from '../components/Projects/Projects';
 
 const ProjectsPage = () => {
-  return <WorkSection />;
+  return <Projects />;
 };
 
 export default ProjectsPage;
