@@ -69,7 +69,15 @@ const deTranslations = {
     loadingArticle: 'Artikel wird geladen...',
     commentsSystem: 'Kommentarsystem-Integration würde hier stehen (z.B. Disqus, eigene Lösung)',
     linkCopied: 'Link in die Zwischenablage kopiert!',
-    failedToCopy: 'Fehler beim Kopieren des Links'
+    failedToCopy: 'Fehler beim Kopieren des Links',
+    loadingArticles: 'Artikel werden geladen...',
+    viewAllArticles: 'Alle Artikel anzeigen',
+    readMoreArrow: 'Weiterlesen →',
+    uncategorized: 'Unkategorisiert',
+    minRead: 'Min. Lesezeit',
+    views: 'Aufrufe',
+    likes: 'Likes',
+    comments: 'Kommentare'
   },
   projects: {
     title: 'Meine Projekte',

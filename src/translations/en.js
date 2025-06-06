@@ -69,7 +69,15 @@ const enTranslations = {
     loadingArticle: 'Loading article...',
     commentsSystem: 'Comments system integration would appear here (e.g., Disqus, custom solution)',
     linkCopied: 'Link copied to clipboard!',
-    failedToCopy: 'Failed to copy link'
+    failedToCopy: 'Failed to copy link',
+    loadingArticles: 'Loading articles...',
+    viewAllArticles: 'View All Articles',
+    readMoreArrow: 'Read More →',
+    uncategorized: 'Uncategorized',
+    minRead: 'min read',
+    views: 'views',
+    likes: 'likes',
+    comments: 'comments'
   },
   projects: {
     title: 'My Projects',

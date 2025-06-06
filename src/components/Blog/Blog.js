@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useI18n } from '../../contexts/I18nContext';
 import './Blog.css';
@@ -15,17 +15,16 @@ const Blog = () => {
   const [currentCategory, setCurrentCategory] = useState('');
   const [currentSearch, setCurrentSearch] = useState('');
 
-  useEffect(() => {
-    fetchCategories();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [langLoading]); // Remove fetchCategories from dependencies
+  // Debug translations
+  console.log('Blog translations debug:', {
+    minRead: t('blog.minRead'),
+    views: t('blog.views'),
+    uncategorized: t('blog.uncategorized'),
+    readMoreArrow: t('blog.readMoreArrow'),
+    title: t('blog.title')
+  });
 
-  useEffect(() => {
-    fetchBlogArticles();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentPage, currentCategory, currentSearch, langLoading]); // Remove fetchBlogArticles from dependencies
-
-  const fetchCategories = async () => {
+  const fetchCategories = useCallback(async () => {
     if (langLoading) return;
     
     try {
@@ -36,9 +35,9 @@ const Blog = () => {
     } catch (err) {
       console.error('Failed to fetch categories:', err);
     }
-  };
+  }, [apiCall, langLoading]);
 
-  const fetchBlogArticles = async () => {
+  const fetchBlogArticles = useCallback(async () => {
     if (langLoading) return;
     
     try {
@@ -65,11 +64,19 @@ const Blog = () => {
       
     } catch (err) {
       console.error('Failed to fetch blog articles:', err);
-      setError(t('ui.error') || 'Failed to load articles');
+      setError(t('ui.error'));
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [apiCall, langLoading, currentPage, currentCategory, currentSearch, t]);
+
+  useEffect(() => {
+    fetchCategories();
+  }, [fetchCategories]);
+
+  useEffect(() => {
+    fetchBlogArticles();
+  }, [fetchBlogArticles]);
 
   const handleSearchChange = (e) => {
     setCurrentSearch(e.target.value);
@@ -99,7 +106,7 @@ const Blog = () => {
   const getCategoryIcon = (categoryName) => {
     const icons = {
       'web development': '💻',
-      'artifical intelligence': '🤖',
+      'artificial intelligence': '🤖',
       'tutorials': '🚀',
       'technology': '🌐',
       'insights': '💡'
@@ -108,29 +115,27 @@ const Blog = () => {
   };
 
   const openBlogPost = (article) => {
-    // Navigate to individual blog post using React Router
     navigate(`/blog/${article.slug}`);
   };
 
   // Debounce search
   useEffect(() => {
+    if (currentSearch === '') return;
+    
     const timer = setTimeout(() => {
-      if (currentSearch !== '') {
-        fetchBlogArticles();
-      }
+      fetchBlogArticles();
     }, 300);
 
     return () => clearTimeout(timer);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentSearch]); // Remove fetchBlogArticles from dependencies
+  }, [currentSearch, fetchBlogArticles]);
 
   if (isLoading && articles.length === 0) {
     return (
       <div className="blog-page">
         <div className="container">
           <div className="page-header">
-            <h1>{t('sections.blog') || 'Blog'}</h1>
-            <p>Loading articles...</p>
+            <h1>{t('blog.title')}</h1>
+            <p>{t('blog.loadingArticles')}</p>
           </div>
           <div className="blog-loading">
             <div className="loading-spinner"></div>
@@ -145,7 +150,7 @@ const Blog = () => {
       <div className="blog-page">
         <div className="container">
           <div className="page-header">
-            <h1>{t('sections.blog') || 'Blog'}</h1>
+            <h1>{t('blog.title')}</h1>
             <p className="error-message">{error}</p>
           </div>
         </div>
@@ -157,8 +162,8 @@ const Blog = () => {
     <div className="blog-page">
       <div className="blog-container">
         <div className="page-header">
-          <h1>{t('sections.blog') || 'Blog & Insights'}</h1>
-          <p>Thoughts on software development, technology trends, and lessons learned from building digital solutions.</p>
+          <h1>{t('blog.title')}</h1>
+          <p>{t('blog.description')}</p>
         </div>
 
         {/* Search and Filter */}
@@ -167,14 +172,14 @@ const Blog = () => {
             <div className="search-box">
               <input
                 type="text"
-                placeholder="Search articles..."
+                placeholder={t('blog.searchPlaceholder')}
                 value={currentSearch}
                 onChange={handleSearchChange}
               />
             </div>
             <div className="category-filter">
               <select value={currentCategory} onChange={handleCategoryChange}>
-                <option value="">All Categories</option>
+                <option value="">{t('blog.allCategories')}</option>
                 {categories.map(category => (
                   <option key={category.id} value={category.slug}>
                     {category.name}
@@ -210,31 +215,31 @@ const Blog = () => {
                       className="blog-category"
                       style={{ backgroundColor: article.category?.color || '#667eea' }}
                     >
-                      {article.category?.name || 'Uncategorized'}
+                      {article.category?.name || t('blog.uncategorized')}
                     </span>
                     <span>{formatDate(article.published_at)}</span>
-                    <span>{article.reading_time_minutes} min read</span>
+                    <span>{article.reading_time_minutes} {t('blog.minRead')}</span>
                   </div>
                   <h3 className="blog-title">{article.title}</h3>
                   <p className="blog-excerpt">{article.excerpt}</p>
                   <div className="blog-stats">
                     <span className="stat">
                       <span className="stat-icon">👁</span>
-                      {article.view_count}
+                      {article.view_count} {t('blog.views')}
                     </span>
                     <span className="stat">
                       <span className="stat-icon">❤️</span>
-                      {article.like_count}
+                      {article.like_count} {t('blog.likes')}
                     </span>
                     {article.comment_count > 0 && (
                       <span className="stat">
                         <span className="stat-icon">💬</span>
-                        {article.comment_count}
+                        {article.comment_count} {t('blog.comments')}
                       </span>
                     )}
                   </div>
                   <div className="read-more">
-                    Read More →
+                    {t('blog.readMoreArrow')}
                   </div>
                 </div>
               </article>
@@ -242,8 +247,8 @@ const Blog = () => {
           </div>
         ) : (
           <div className="empty-state">
-            <h3>No articles found</h3>
-            <p>Try adjusting your search terms or check back later for new content.</p>
+            <h3>{t('blog.noArticlesFound')}</h3>
+            <p>{t('blog.tryAdjustingSearch')}</p>
           </div>
         )}
 
@@ -255,7 +260,7 @@ const Blog = () => {
               disabled={!pagination.has_prev}
               className="pagination-btn"
             >
-              ← Previous
+              ← {t('ui.previous')}
             </button>
             
             {/* Page numbers */}
@@ -286,7 +291,7 @@ const Blog = () => {
               disabled={!pagination.has_next}
               className="pagination-btn"
             >
-              Next →
+              {t('ui.next')} →
             </button>
           </div>
         )}

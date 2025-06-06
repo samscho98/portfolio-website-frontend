@@ -1,5 +1,3 @@
-// Enhanced ContactPage.js with bot protection features
-
 import React, { useState, useEffect } from 'react';
 import { useI18n } from '../contexts/I18nContext';
 
@@ -15,7 +13,7 @@ const ContactPage = () => {
     timeline: '',
     message: '',
     referral_source: '',
-    // Bot protection fields (don't add to initial state display)
+    // Bot protection fields
     website: '', // Honeypot field
     token: '' // JavaScript token
   });
@@ -26,48 +24,46 @@ const ContactPage = () => {
 
   // Generate token and set form start time on component mount
   useEffect(() => {
-    // Generate JavaScript token
     const token = btoa(new Date().toISOString() + Math.random());
     setFormData(prev => ({ ...prev, token }));
-    
-    // Record when form was loaded (for timing protection)
     setFormStartTime(Date.now());
   }, []);
 
+  // Form options arrays
   const projectTypes = [
-    { value: 'website', label: 'Website Development' },
-    { value: 'api', label: 'API Development' },
-    { value: 'database', label: 'Database Design' },
-    { value: 'automation', label: 'Process Automation' },
-    { value: 'data-processing', label: 'Data Processing' },
-    { value: 'consultation', label: 'Technical Consultation' },
-    { value: 'other', label: 'Other' }
+    { value: 'website', label: t('contact.projectTypes.website') },
+    { value: 'api', label: t('contact.projectTypes.api') },
+    { value: 'database', label: t('contact.projectTypes.database') },
+    { value: 'automation', label: t('contact.projectTypes.automation') },
+    { value: 'data-processing', label: t('contact.projectTypes.dataProcessing') },
+    { value: 'consultation', label: t('contact.projectTypes.consultation') },
+    { value: 'other', label: t('contact.projectTypes.other') }
   ];
 
   const budgetRanges = [
-    { value: 'under-200', label: 'Under 200€' },
-    { value: '200-500', label: '200€ - 500€' },
-    { value: '500-1000', label: '500€ - €1,000' },
-    { value: '1000-2500', label: '1,000€ - 2,500€' },
-    { value: 'over-2500', label: 'Over €2,500' },
-    { value: 'flexible', label: 'Flexible / To be discussed' }
+    { value: 'under-200', label: t('contact.budgetRanges.under200') },
+    { value: '200-500', label: t('contact.budgetRanges.range200500') },
+    { value: '500-1000', label: t('contact.budgetRanges.range5001000') },
+    { value: '1000-2500', label: t('contact.budgetRanges.range10002500') },
+    { value: 'over-2500', label: t('contact.budgetRanges.over2500') },
+    { value: 'flexible', label: t('contact.budgetRanges.flexible') }
   ];
 
   const timelines = [
-    { value: 'asap', label: 'ASAP' },
-    { value: '1-month', label: '1 Month' },
-    { value: '2-3-months', label: '2-3 Months' },
-    { value: '3-6-months', label: '3-6 Months' },
-    { value: 'flexible', label: 'Flexible' }
+    { value: 'asap', label: t('contact.timelines.asap') },
+    { value: '1-month', label: t('contact.timelines.oneMonth') },
+    { value: '2-3-months', label: t('contact.timelines.twoThreeMonths') },
+    { value: '3-6-months', label: t('contact.timelines.threeToSixMonths') },
+    { value: 'flexible', label: t('contact.timelines.flexible') }
   ];
 
   const referralSources = [
-    { value: 'google-search', label: 'Google Search' },
-    { value: 'linkedin', label: 'LinkedIn' },
-    { value: 'referral', label: 'Referral from friend/colleague' },
-    { value: 'github', label: 'GitHub' },
-    { value: 'social-media', label: 'Social Media' },
-    { value: 'other', label: 'Other' }
+    { value: 'google-search', label: t('contact.referralSources.googleSearch') },
+    { value: 'linkedin', label: t('contact.referralSources.linkedin') },
+    { value: 'referral', label: t('contact.referralSources.referral') },
+    { value: 'github', label: t('contact.referralSources.github') },
+    { value: 'social-media', label: t('contact.referralSources.socialMedia') },
+    { value: 'other', label: t('contact.referralSources.other') }
   ];
 
   const handleInputChange = (e) => {
@@ -90,17 +86,17 @@ const ContactPage = () => {
     const newErrors = {};
     
     if (!formData.name.trim()) {
-      newErrors.name = 'Name is required';
+      newErrors.name = t('contact.form.nameRequired');
     }
     
     if (!formData.email.trim()) {
-      newErrors.email = 'Email is required';
+      newErrors.email = t('contact.form.emailRequired');
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Please enter a valid email address';
+      newErrors.email = t('contact.form.emailInvalid');
     }
     
     if (!formData.message.trim()) {
-      newErrors.message = 'Message is required';
+      newErrors.message = t('contact.form.messageRequired');
     }
     
     setErrors(newErrors);
@@ -155,9 +151,8 @@ const ContactPage = () => {
           message: '',
           referral_source: '',
           website: '',
-          token: btoa(new Date().toISOString() + Math.random()) // Generate new token
+          token: btoa(new Date().toISOString() + Math.random())
         });
-        // Reset form start time
         setFormStartTime(Date.now());
       } else {
         throw new Error(data.message || 'Submission failed');
@@ -192,7 +187,7 @@ const ContactPage = () => {
             WebkitTextFillColor: 'transparent',
             backgroundClip: 'text'
           }}>
-            {t('nav.contact') || 'Get In Touch'}
+            {t('contact.title')}
           </h1>
           <p style={{ 
             fontSize: '1.2rem', 
@@ -201,7 +196,7 @@ const ContactPage = () => {
             margin: '0 auto',
             lineHeight: '1.6'
           }}>
-            Ready to bring your project to life? Let's discuss how I can help you build scalable backend solutions and efficient data management systems.
+            {t('contact.subtitle')}
           </p>
         </div>
 
@@ -212,6 +207,7 @@ const ContactPage = () => {
           padding: '2rem',
           border: '1px solid #334155'
         }}>
+          {/* Success Message */}
           {submitStatus === 'success' && (
             <div style={{
               background: '#22c55e',
@@ -221,10 +217,11 @@ const ContactPage = () => {
               marginBottom: '2rem',
               textAlign: 'center'
             }}>
-              <strong>Thank you!</strong> Your message has been sent successfully. I'll get back to you within 24 hours.
+              <strong>{t('contact.submit.success')}</strong>
             </div>
           )}
 
+          {/* Error Message */}
           {submitStatus === 'error' && (
             <div style={{
               background: '#ef4444',
@@ -234,7 +231,7 @@ const ContactPage = () => {
               marginBottom: '2rem',
               textAlign: 'center'
             }}>
-              <strong>Error:</strong> There was a problem sending your message. Please try again or email me directly.
+              <strong>{t('contact.submit.error')}</strong>
             </div>
           )}
 
@@ -277,7 +274,7 @@ const ContactPage = () => {
                   fontWeight: '500',
                   color: '#cbd5e1'
                 }}>
-                  Name *
+                  {t('contact.form.name')} *
                 </label>
                 <input
                   type="text"
@@ -294,7 +291,7 @@ const ContactPage = () => {
                     fontSize: '1rem',
                     boxSizing: 'border-box'
                   }}
-                  placeholder="Your full name"
+                  placeholder={t('contact.form.namePlaceholder')}
                 />
                 {errors.name && (
                   <span style={{ color: '#ef4444', fontSize: '0.875rem' }}>
@@ -310,7 +307,7 @@ const ContactPage = () => {
                   fontWeight: '500',
                   color: '#cbd5e1'
                 }}>
-                  Email *
+                  {t('contact.form.email')} *
                 </label>
                 <input
                   type="email"
@@ -327,7 +324,7 @@ const ContactPage = () => {
                     fontSize: '1rem',
                     boxSizing: 'border-box'
                   }}
-                  placeholder="your.email@example.com"
+                  placeholder={t('contact.form.emailPlaceholder')}
                 />
                 {errors.email && (
                   <span style={{ color: '#ef4444', fontSize: '0.875rem' }}>
@@ -351,7 +348,7 @@ const ContactPage = () => {
                   fontWeight: '500',
                   color: '#cbd5e1'
                 }}>
-                  Company
+                  {t('contact.form.company')}
                 </label>
                 <input
                   type="text"
@@ -368,7 +365,7 @@ const ContactPage = () => {
                     fontSize: '1rem',
                     boxSizing: 'border-box'
                   }}
-                  placeholder="Your company name"
+                  placeholder={t('contact.form.companyPlaceholder')}
                 />
               </div>
               
@@ -379,7 +376,7 @@ const ContactPage = () => {
                   fontWeight: '500',
                   color: '#cbd5e1'
                 }}>
-                  Phone
+                  {t('contact.form.phone')}
                 </label>
                 <input
                   type="tel"
@@ -396,7 +393,7 @@ const ContactPage = () => {
                     fontSize: '1rem',
                     boxSizing: 'border-box'
                   }}
-                  placeholder="+49 123 456 7890"
+                  placeholder={t('contact.form.phonePlaceholder')}
                 />
               </div>
             </div>
@@ -415,7 +412,7 @@ const ContactPage = () => {
                   fontWeight: '500',
                   color: '#cbd5e1'
                 }}>
-                  Project Type
+                  {t('contact.form.projectType')}
                 </label>
                 <select
                   name="project_type"
@@ -432,7 +429,7 @@ const ContactPage = () => {
                     boxSizing: 'border-box'
                   }}
                 >
-                  <option value="">Select project type</option>
+                  <option value="">{t('contact.projectTypes.select')}</option>
                   {projectTypes.map(type => (
                     <option key={type.value} value={type.value}>
                       {type.label}
@@ -448,7 +445,7 @@ const ContactPage = () => {
                   fontWeight: '500',
                   color: '#cbd5e1'
                 }}>
-                  Budget Range
+                  {t('contact.form.budgetRange')}
                 </label>
                 <select
                   name="budget_range"
@@ -465,7 +462,7 @@ const ContactPage = () => {
                     boxSizing: 'border-box'
                   }}
                 >
-                  <option value="">Select budget range</option>
+                  <option value="">{t('contact.budgetRanges.select')}</option>
                   {budgetRanges.map(budget => (
                     <option key={budget.value} value={budget.value}>
                       {budget.label}
@@ -489,7 +486,7 @@ const ContactPage = () => {
                   fontWeight: '500',
                   color: '#cbd5e1'
                 }}>
-                  Timeline
+                  {t('contact.form.timeline')}
                 </label>
                 <select
                   name="timeline"
@@ -506,7 +503,7 @@ const ContactPage = () => {
                     boxSizing: 'border-box'
                   }}
                 >
-                  <option value="">Select timeline</option>
+                  <option value="">{t('contact.timelines.select')}</option>
                   {timelines.map(timeline => (
                     <option key={timeline.value} value={timeline.value}>
                       {timeline.label}
@@ -522,7 +519,7 @@ const ContactPage = () => {
                   fontWeight: '500',
                   color: '#cbd5e1'
                 }}>
-                  How did you find me?
+                  {t('contact.form.referralSource')}
                 </label>
                 <select
                   name="referral_source"
@@ -539,7 +536,7 @@ const ContactPage = () => {
                     boxSizing: 'border-box'
                   }}
                 >
-                  <option value="">Select source</option>
+                  <option value="">{t('contact.referralSources.select')}</option>
                   {referralSources.map(source => (
                     <option key={source.value} value={source.value}>
                       {source.label}
@@ -557,7 +554,7 @@ const ContactPage = () => {
                 fontWeight: '500',
                 color: '#cbd5e1'
               }}>
-                Project Details *
+                {t('contact.form.message')} *
               </label>
               <textarea
                 name="message"
@@ -576,7 +573,7 @@ const ContactPage = () => {
                   fontFamily: 'inherit',
                   boxSizing: 'border-box'
                 }}
-                placeholder="Tell me about your project. What are your goals, requirements, and any specific challenges you're facing?"
+                placeholder={t('contact.form.messagePlaceholder')}
               />
               {errors.message && (
                 <span style={{ color: '#ef4444', fontSize: '0.875rem' }}>
@@ -605,7 +602,7 @@ const ContactPage = () => {
                   opacity: isSubmitting ? 0.7 : 1
                 }}
               >
-                {isSubmitting ? 'Sending...' : 'Send Message'}
+                {isSubmitting ? t('contact.submit.sending') : t('contact.submit.send')}
               </button>
             </div>
           </form>
@@ -620,7 +617,7 @@ const ContactPage = () => {
           borderRadius: '12px'
         }}>
           <h3 style={{ marginBottom: '1rem', color: 'white' }}>
-            Prefer to reach out directly?
+            {t('contact.alternative.title')}
           </h3>
           <div style={{ 
             display: 'flex', 
@@ -641,7 +638,7 @@ const ContactPage = () => {
                 transition: 'all 0.3s ease'
               }}
             >
-              📧 contact@schonenberg.dev
+              {t('contact.alternative.email')}
             </a>
             <a 
               href="https://www.linkedin.com/in/sams98/" 
@@ -658,7 +655,7 @@ const ContactPage = () => {
                 transition: 'all 0.3s ease'
               }}
             >
-              💼 LinkedIn
+              {t('contact.alternative.linkedin')}
             </a>
           </div>
         </div>

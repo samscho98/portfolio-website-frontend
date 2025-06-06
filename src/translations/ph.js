@@ -1,223 +1,231 @@
-const phTranslations = {
-  nav: {
-    home: 'Home',
-    about: 'Tungkol',
-    blog: 'Blog',
-    projects: 'Mga Proyekto',
-    pricing: 'Presyo',
-    contact: 'Makipag-ugnayan'
+const enTranslations = {
+  "nav": {
+    "home": "Home",
+    "about": "Tungkol sa Akin",
+    "blog": "Blog",
+    "projects": "Mga Projects",
+    "pricing": "Presyo",
+    "contact": "Kontak"
   },
-  sections: {
-    featuredProjects: 'Mga Pangunahing Proyekto',
-    latestBlog: 'Pinakabagong Blog Post',
-    aboutMe: 'Tungkol Sa Akin',
-    testimonials: 'Ano Ang Sinasabi Ng Mga Kliyente',
-    blog: 'Blog at Mga Pananaw'
+  "sections": {
+    "featuredProjects": "Mga Tampok na Project",
+    "latestBlog": "Pinakabagong Blog Post",
+    "aboutMe": "Tungkol sa Akin",
+    "testimonials": "Sabi ng Clients",
+    "blog": "Mga Kwento at Tips"
   },
-  ui: {
-    viewProject: 'Tingnan Ang Proyekto',
-    github: 'GitHub',
-    readMore: 'Basahin Pa',
-    learnMore: 'Matuto Pa',
-    loading: 'Naglo-load...',
-    error: 'May nagkaproblema',
-    copyright: 'Lahat ng karapatan ay nakalaan.',
-    language: 'Wika',
-    searchArticles: 'Maghanap ng mga artikulo...',
-    allCategories: 'Lahat ng Kategorya',
-    noArticlesFound: 'Walang nahanap na artikulo',
-    tryAdjustingSearch: 'Subukan na baguhin ang inyong mga salitang hinahanap o bumalik mamaya para sa bagong nilalaman.',
-    previous: 'Nakaraan',
-    next: 'Susunod',
-    backToBlog: 'Bumalik sa Blog',
-    shareThisArticle: 'Ibahagi ang Artikulong Ito',
-    aboutTheAuthor: 'Tungkol sa May-akda',
-    relatedArticles: 'Mga Kaugnay na Artikulo',
-    tableOfContents: 'Talaan ng Nilalaman',
-    tags: 'Mga Tag',
-    comments: 'Mga Komento',
-    views: 'mga pagtingin',
-    likes: 'mga like',
-    minRead: 'min na pagbasa'
+  "ui": {
+    "viewProject": "Silipin ang Project",
+    "github": "GitHub",
+    "readMore": "Basahin Pa",
+    "learnMore": "Alamin Pa",
+    "loading": "Naglo-load...",
+    "error": "Ay! May mali yata.",
+    "copyright": "Lahat ng karapatan nakareserba.",
+    "language": "Wika",
+    "searchArticles": "Maghanap ng articles...",
+    "allCategories": "Lahat ng Kategorya",
+    "noArticlesFound": "Walang nakitang articles",
+    "tryAdjustingSearch": "I-try mo ibang search o balik ka later.",
+    "previous": "Nauna",
+    "next": "Kasunod",
+    "backToBlog": "Balik sa Blog",
+    "shareThisArticle": "I-share ang article na 'to",
+    "aboutTheAuthor": "Kilalanin ang Author",
+    "relatedArticles": "Kaugnay na Articles",
+    "tableOfContents": "Table of Contents",
+    "tags": "Mga Tag",
+    "comments": "Mga Komento",
+    "views": "Views",
+    "likes": "Likes",
+    "minRead": "Minuto lang 'to basahin"
   },
-  hero: {
-    greeting: 'Ako si',
-    role: 'isang Backend Developer',
-    expertise: '& Freelance Expert sa Data Management'
+  "hero": {
+    "greeting": "Ako si",
+    "role": "isang Backend Developer",
+    "expertise": "at freelance na bihasa sa Data Management"
   },
-  footer: {
-    contact: 'Makipag-ugnayan',
-    privacyPolicy: 'Patakaran sa Privacy',
-    termsOfService: 'Mga Tuntunin ng Serbisyo',
-    followUs: 'Sundan Kami',
-    subscribe: 'Mag-subscribe sa aming newsletter para sa mga update at alok.',
-    subscribeButton: 'Mag-subscribe',
-    thankYou: 'Salamat sa pag-subscribe!',
-    error: 'Hindi naging matagumpay ang subscription. Subukan ulit mamaya.',
-    rights: '© 2025 Schonberg Developments. Lahat ng karapatan ay nakalaan.',
+  "footer": {
+    "contact": "Kontak",
+    "privacyPolicy": "Privacy Policy",
+    "termsOfService": "Terms of Service",
+    "followUs": "I-follow kami",
+    "subscribe": "Mag-subscribe para sa updates at offers!",
+    "subscribeButton": "Mag-subscribe",
+    "thankYou": "Salamat sa pag-subscribe!",
+    "error": "Di nag-work ang subscription. Try mo ulit mamaya.",
+    "rights": "© 2025 Schonberg Developments. Lahat ng karapatan reserved."
   },
-    blog: {
-    title: 'Blog at Mga Pananaw',
-    description: 'Mga kaisipan tungkol sa software development, mga uso sa teknolohiya, at mga natutunan mula sa pagbuo ng mga digital na solusyon.',
-    searchPlaceholder: 'Maghanap ng mga artikulo...',
-    allCategories: 'Lahat ng Kategorya',
-    noArticlesFound: 'Walang nahanap na artikulo',
-    tryAdjustingSearch: 'Subukan na baguhin ang inyong mga salitang hinahanap o bumalik mamaya para sa bagong nilalaman.',
-    articleNotFound: 'Hindi Nahanap ang Artikulo',
-    articleNotFoundDescription: 'Ang artikulong hinahanap ninyo ay hindi umiiral o tinanggal na.',
-    loadingArticle: 'Naglo-load ng artikulo...',
-    commentsSystem: 'Ang sistema ng mga komento ay ilalagay dito (hal. Disqus, sariling solusyon)',
-    linkCopied: 'Na-copy na ang link sa clipboard!',
-    failedToCopy: 'Hindi na-copy ang link'
+  "blog": {
+    "title": "Mga Kwento at Tips",
+    "description": "Thoughts on software development, tech trends, and lessons from building digital solutions.",
+    "searchPlaceholder": "Maghanap ng articles...",
+    "allCategories": "Lahat ng Kategorya",
+    "noArticlesFound": "Walang nakitang articles",
+    "tryAdjustingSearch": "I-try mo ibang search o balik ka later.",
+    "articleNotFound": "Article not found",
+    "articleNotFoundDescription": "The article you are looking for does not exist or has been removed.",
+    "loadingArticle": "Loading article...",
+    "commentsSystem": "Comments system integration would appear here (e.g., Disqus, custom solution)",
+    "linkCopied": "Link copied to clipboard!",
+    "failedToCopy": "Failed to copy link",
+    "loadingArticles": "Loading articles...",
+    "viewAllArticles": "View All Articles",
+    "readMoreArrow": "Read More →",
+    "uncategorized": "Uncategorized",
+    "minRead": "min read",
+    "views": "views",
+    "likes": "likes",
+    "comments": "comments"
   },
-  projects: {
-    title: 'Mga Proyekto Ko',
-    subtitle: 'Pagpapakita ng aking trabaho sa backend development, data management, at full-stack solutions',
-    searchPlaceholder: 'Maghanap ng mga proyekto...',
-    allCategories: 'Lahat ng Kategorya',
-    allTechnologies: 'Lahat ng Teknolohiya',
-    category: 'Kategorya',
-    technology: 'Teknolohiya',
-    resetFilters: 'I-reset ang mga Filter',
-    showingResults: 'Nagpapakita ng {count} sa {total} na proyekto',
-    noProjectsFound: 'Walang nahanap na proyekto',
-    tryAdjustingFilters: 'Subukan na baguhin ang inyong mga filter o search terms.',
-    showAllProjects: 'Ipakita Lahat ng Proyekto',
-    started: 'Nagsimula',
-    completed: 'Natapos',
-    viewLive: 'Tingnan Live',
-    viewCode: 'Tingnan ang Code',
-    caseStudy: 'Case Study',
-    loadingProjects: 'Naglo-load ng mga proyekto...',
-    failedToLoad: 'Hindi na-load ang mga proyekto. Pakisubukan ulit mamaya.',
-    status: {
-      completed: 'Tapos na',
-      inProgress: 'Ginagawa pa',
-      planning: 'Pinaplano pa',
-      onHold: 'Nakatigil'
+  "projects": {
+    "title": "My Projects",
+    "subtitle": "A showcase of my work in backend development, data management, and full-stack solutions",
+    "searchPlaceholder": "Search projects...",
+    "allCategories": "Lahat ng Kategorya",
+    "allTechnologies": "All Technologies",
+    "category": "Category",
+    "technology": "Technology",
+    "resetFilters": "Reset Filters",
+    "showingResults": "Showing {count} of {total} projects",
+    "noProjectsFound": "No projects found",
+    "tryAdjustingFilters": "Try adjusting your filters or search terms.",
+    "showAllProjects": "Show All Projects",
+    "started": "Started",
+    "completed": "Completed",
+    "viewLive": "View Live",
+    "viewCode": "View Code",
+    "caseStudy": "Case Study",
+    "loadingProjects": "Loading projects...",
+    "failedToLoad": "Failed to load projects. Please try again later.",
+    "status": {
+      "completed": "Completed",
+      "inProgress": "In Progress",
+      "planning": "Planning",
+      "onHold": "On Hold"
     }
   },
-  pricing: {
-    title: 'Presyo',
-    subtitle: 'Transparent na presyo para sa freelance development services. Gumawa tayo ng magagandang proyekto.',
-    consultation: {
-      title: 'Konsultasyon',
-      price: '€75/oras',
-      description: 'Technical consultation, code review, at project planning',
-      features: [
-        'Technical assessment',
-        'Architecture planning',
-        'Code review',
-        'Best practices guidance'
+  "pricing": {
+    "title": "Presyo",
+    "subtitle": "Transparent pricing for freelance development services. Let\"s build something amazing together.",
+    "consultation": {
+      "title": "Consultation",
+      "price": "€75/hour",
+      "description": "Consultation, code review, at project planning",
+      "features": [
+        "Technical assessment",
+        "Architecture planning",
+        "Code review",
+        "Best practices guidance"
       ]
     },
-    development: {
-      title: 'Development',
-      price: '€65/oras',
-      description: 'Full-stack development at implementation',
-      features: [
-        'Frontend development',
-        'Backend development',
-        'Database design',
-        'API development',
-        'Testing at deployment'
+    "development": {
+      "title": "Development",
+      "price": "€65/hour",
+      "description": "Buong stack na dev at pag-implement",
+      "features": [
+        "Frontend development",
+        "Backend development",
+        "Database design",
+        "API development",
+        "Testing & deployment"
       ],
-      mostPopular: 'Pinaka-Popular'
+      "mostPopular": "Most Popular"
     },
-    project: {
-      title: 'Project-Based',
-      price: 'Fixed Price',
-      description: 'Kumpletong project delivery na may defined scope',
-      features: [
-        'Detalyadong project scope',
-        'Timeline milestones',
-        'Regular na updates',
-        'Post-launch support'
+    "project": {
+      "title": "Project-Based",
+      "price": "Fixed Price",
+      "description": "Buong project mula simula hanggang matapos",
+      "features": [
+        "Detailed project scope",
+        "Timeline milestones",
+        "Regular updates",
+        "Post-launch support"
       ]
     },
-    cta: {
-      title: 'Ready na ba kayo magsimula?',
-      subtitle: 'Pag-usapan natin ang inyong proyekto at hanapin ang pinakamahusay na solusyon para sa inyong pangangailangan.',
-      getInTouch: 'Makipag-ugnayan',
-      emailDirectly: 'Email nang Direkta'
+    "cta": {
+      "title": "G ka na ba magsimula?",
+      "subtitle": "Let\"s discuss your project and find the best solution for your needs.",
+      "getInTouch": "Kontakin Ako",
+      "emailDirectly": "Email mo ko direct"
     },
-    alternative: {
-      title: 'Mas gusto ninyong direktang makipag-ugnayan?',
-      email: '📧 contact@schonenberg.dev',
-      linkedin: '💼 LinkedIn'
+    "alternative": {
+      "title": "Gusto mo ba direct contact?",
+      "email": "📧 contact@schonenberg.dev",
+      "linkedin": "💼 LinkedIn"
     }
   },
-  contact: {
-    title: 'Makipag-ugnayan',
-    subtitle: 'Handang gawing totoo ang inyong proyekto? Pag-usapan natin kung paano ko kayo matutulungan sa pagbuo ng scalable backend solutions at efficient data management systems.',
-    form: {
-      name: 'Pangalan',
-      nameRequired: 'Kailangan ang pangalan',
-      email: 'Email',
-      emailRequired: 'Kailangan ang email',
-      emailInvalid: 'Pakiindagdag ang wastong email address',
-      company: 'Kumpanya',
-      phone: 'Telepono',
-      projectType: 'Uri ng Proyekto',
-      budgetRange: 'Budget Range',
-      timeline: 'Timeline',
-      referralSource: 'Paano ninyo ako nahanap?',
-      message: 'Mga Detalye ng Proyekto',
-      messageRequired: 'Kailangan ang mensahe',
-      namePlaceholder: 'Inyong buong pangalan',
-      emailPlaceholder: 'inyong.email@halimbawa.com',
-      companyPlaceholder: 'Pangalan ng inyong kumpanya',
-      phonePlaceholder: '+63 123 456 7890',
-      messagePlaceholder: 'Sabihin ninyo sa akin ang tungkol sa inyong proyekto. Ano ang inyong mga layunin, pangangailangan, at mga hamon na kinakaharap?'
+  "contact": {
+    "title": "Get In Touch",
+    "subtitle": "Ready to bring your project to life? Let\"s discuss how I can help you build scalable backend solutions and efficient data management systems.",
+    "form": {
+      "name": "Name",
+      "nameRequired": "Name is required",
+      "email": "Email",
+      "emailRequired": "Email is required",
+      "emailInvalid": "Please enter a valid email address",
+      "company": "Company",
+      "phone": "Phone",
+      "projectType": "Project Type",
+      "budgetRange": "Budget Range",
+      "timeline": "Timeline",
+      "referralSource": "How did you find me?",
+      "message": "Project Details",
+      "messageRequired": "Message is required",
+      "namePlaceholder": "Your full name",
+      "emailPlaceholder": "your.email@example.com",
+      "companyPlaceholder": "Your company name",
+      "phonePlaceholder": "+49 123 456 7890",
+      "messagePlaceholder": "Tell me about your project. What are your goals, requirements, and any specific challenges you\"re facing?"
     },
-    projectTypes: {
-      select: 'Piliin ang uri ng proyekto',
-      website: 'Website Development',
-      api: 'API Development',
-      database: 'Database Design',
-      automation: 'Process Automation',
-      dataProcessing: 'Data Processing',
-      consultation: 'Technical Consultation',
-      other: 'Iba pa'
+    "projectTypes": {
+      "select": "Select project type",
+      "website": "Website Development",
+      "api": "API Development",
+      "database": "Database Design",
+      "automation": "Process Automation",
+      "dataProcessing": "Data Processing",
+      "consultation": "Technical Consultation",
+      "other": "Other"
     },
-    budgetRanges: {
-      select: 'Piliin ang budget range',
-      under200: 'Wala pang 200€',
-      range200500: '200€ - 500€',
-      range5001000: '500€ - €1,000',
-      range10002500: '1,000€ - 2,500€',
-      over2500: 'Mahigit 2,500€',
-      flexible: 'Flexible / Pag-usapan natin'
+    "budgetRanges": {
+      "select": "Select budget range",
+      "under200": "Under 200€",
+      "range200500": "200€ - 500€",
+      "range5001000": "500€ - €1,000",
+      "range10002500": "1,000€ - 2,500€",
+      "over2500": "Over €2,500",
+      "flexible": "Flexible / To be discussed"
     },
-    timelines: {
-      select: 'Piliin ang timeline',
-      asap: 'Agad-agad',
-      oneMonth: '1 Buwan',
-      twoThreeMonths: '2-3 Buwan',
-      threeToSixMonths: '3-6 na Buwan',
-      flexible: 'Flexible'
+    "timelines": {
+      "select": "Select timeline",
+      "asap": "ASAP",
+      "oneMonth": "1 Month",
+      "twoThreeMonths": "2-3 Months",
+      "threeToSixMonths": "3-6 Months",
+      "flexible": "Flexible"
     },
-    referralSources: {
-      select: 'Piliin ang source',
-      googleSearch: 'Google Search',
-      linkedin: 'LinkedIn',
-      referral: 'Referral mula sa kaibigan/kasamahan',
-      github: 'GitHub',
-      socialMedia: 'Social Media',
-      other: 'Iba pa'
+    "referralSources": {
+      "select": "Select source",
+      "googleSearch": "Google Search",
+      "linkedin": "LinkedIn",
+      "referral": "Referral from friend/colleague",
+      "github": "GitHub",
+      "socialMedia": "Social Media",
+      "other": "Other"
     },
-    submit: {
-      sending: 'Pinapadala...',
-      send: 'Ipadala ang Mensahe',
-      success: 'Salamat! Matagumpay na naipadala ang inyong mensahe. Makakakuha kayo ng sagot sa loob ng 24 oras.',
-      error: 'Error: May problema sa pagpapadala ng inyong mensahe. Subukan ulit o mag-email sa akin nang direkta.'
+    "submit": {
+      "sending": "Sending...",
+      "send": "Send Message",
+      "success": "Thank you! Your message has been sent successfully. I\"ll get back to you within 24 hours.",
+      "error": "There was a problem sending your message. Please try again or email me directly."
     },
-    alternative: {
-      title: 'Mas gusto ninyong direktang makipag-ugnayan?',
-      email: '📧 contact@schonenberg.dev',
-      linkedin: '💼 LinkedIn'
+    "alternative": {
+      "title": "Gusto mo ba direct contact?",
+      "email": "📧 contact@schonenberg.dev",
+      "linkedin": "💼 LinkedIn"
     }
   }
 };
 
-export default phTranslations;
+export default enTranslations;
