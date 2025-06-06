@@ -16,42 +16,27 @@ const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://portfolio-api-v93
 
 // Function to detect user's country via IP (with fallback)
 const detectUserCountry = async () => {
-  // Try multiple IP detection services
-  const services = [
-    'https://ipapi.co/country/',
-    'https://api.country.is/',
-    'https://ipinfo.io/country'
-  ];
-
-  for (const service of services) {
-    try {
-      const response = await fetch(service, {
-        method: 'GET',
-        headers: {
-          'Accept': 'application/json'
-        }
-      });
-      
-      if (response.ok) {
-        if (service === 'https://api.country.is/') {
-          const data = await response.json();
-          return data.country;
-        } else if (service === 'https://ipapi.co/country/') {
-          const countryCode = await response.text();
-          return countryCode.trim();
-        } else if (service === 'https://ipinfo.io/country') {
-          const countryCode = await response.text();
-          return countryCode.trim();
-        }
+  try {
+    // Use ipapi.co free tier (no signup required)
+    const response = await fetch('https://ipapi.co/json/', {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'User-Agent': 'Mozilla/5.0 (compatible; SchonenbergPortfolio/1.0)'
       }
-    } catch (error) {
-      console.warn(`IP detection service ${service} failed:`, error);
-      continue; // Try next service
+    });
+    
+    if (response.ok) {
+      const data = await response.json();
+      return data.country_code;
+    } else {
+      console.warn('ipapi.co returned non-200 status:', response.status);
+      return null;
     }
+  } catch (error) {
+    console.warn('IP detection failed:', error);
+    return null;
   }
-  
-  console.warn('All IP detection services failed, falling back to browser language');
-  return null;
 };
 
 // Function to detect browser language
