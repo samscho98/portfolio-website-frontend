@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+// Enhanced ContactPage.js with bot protection features
+
+import React, { useState, useEffect } from 'react';
 import { useI18n } from '../contexts/I18nContext';
 
 const ContactPage = () => {
@@ -12,11 +14,25 @@ const ContactPage = () => {
     budget_range: '',
     timeline: '',
     message: '',
-    referral_source: ''
+    referral_source: '',
+    // Bot protection fields (don't add to initial state display)
+    website: '', // Honeypot field
+    token: '' // JavaScript token
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState(null); // 'success', 'error', or null
+  const [submitStatus, setSubmitStatus] = useState(null);
   const [errors, setErrors] = useState({});
+  const [formStartTime, setFormStartTime] = useState(null);
+
+  // Generate token and set form start time on component mount
+  useEffect(() => {
+    // Generate JavaScript token
+    const token = btoa(new Date().toISOString() + Math.random());
+    setFormData(prev => ({ ...prev, token }));
+    
+    // Record when form was loaded (for timing protection)
+    setFormStartTime(Date.now());
+  }, []);
 
   const projectTypes = [
     { value: 'website', label: 'Website Development' },
@@ -102,12 +118,25 @@ const ContactPage = () => {
     setSubmitStatus(null);
     
     try {
+      // Calculate form fill time (bot protection)
+      const formFillTime = formStartTime ? Date.now() - formStartTime : 0;
+      
+      // Prepare submission data with bot protection fields
+      const submissionData = {
+        ...formData,
+        form_fill_time: formFillTime,
+        user_agent: navigator.userAgent,
+        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+        screen_resolution: `${screen.width}x${screen.height}`,
+        timestamp: new Date().toISOString()
+      };
+      
       const response = await fetch(`${process.env.REACT_APP_API_URL}/contact`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData)
+        body: JSON.stringify(submissionData)
       });
       
       const data = await response.json();
@@ -124,8 +153,12 @@ const ContactPage = () => {
           budget_range: '',
           timeline: '',
           message: '',
-          referral_source: ''
+          referral_source: '',
+          website: '',
+          token: btoa(new Date().toISOString() + Math.random()) // Generate new token
         });
+        // Reset form start time
+        setFormStartTime(Date.now());
       } else {
         throw new Error(data.message || 'Submission failed');
       }
@@ -206,6 +239,30 @@ const ContactPage = () => {
           )}
 
           <form onSubmit={handleSubmit}>
+            {/* HONEYPOT FIELD - Hidden from users */}
+            <input
+              type="text"
+              name="website"
+              value={formData.website}
+              onChange={handleInputChange}
+              style={{
+                display: 'none',
+                position: 'absolute',
+                left: '-9999px',
+                top: '-9999px'
+              }}
+              tabIndex="-1"
+              autoComplete="off"
+              aria-hidden="true"
+            />
+
+            {/* Hidden token field */}
+            <input
+              type="hidden"
+              name="token"
+              value={formData.token}
+            />
+
             {/* Name and Email Row */}
             <div style={{
               display: 'grid',
@@ -583,14 +640,6 @@ const ContactPage = () => {
                 border: '2px solid #475569',
                 transition: 'all 0.3s ease'
               }}
-              onMouseOver={(e) => {
-                e.target.style.borderColor = '#667eea';
-                e.target.style.color = '#667eea';
-              }}
-              onMouseOut={(e) => {
-                e.target.style.borderColor = '#475569';
-                e.target.style.color = '#cbd5e1';
-              }}
             >
               📧 contact@schonenberg.dev
             </a>
@@ -607,14 +656,6 @@ const ContactPage = () => {
                 fontWeight: '600',
                 border: '2px solid #475569',
                 transition: 'all 0.3s ease'
-              }}
-              onMouseOver={(e) => {
-                e.target.style.borderColor = '#667eea';
-                e.target.style.color = '#667eea';
-              }}
-              onMouseOut={(e) => {
-                e.target.style.borderColor = '#475569';
-                e.target.style.color = '#cbd5e1';
               }}
             >
               💼 LinkedIn
