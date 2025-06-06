@@ -14,15 +14,44 @@ export const useI18n = () => {
 // Use environment variable with fallback
 const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://portfolio-api-v936.onrender.com/api';
 
-// Function to detect user's country via IP
+// Function to detect user's country via IP (with fallback)
 const detectUserCountry = async () => {
-  try {
-    const response = await fetch('https://ip-api.com/json/');
-    const data = await response.json();
-    return data.countryCode; // Returns 'US', 'DE', 'PH', etc.
-  } catch (error) {
-    return null;
+  // Try multiple IP detection services
+  const services = [
+    'https://ipapi.co/country/',
+    'https://api.country.is/',
+    'https://ipinfo.io/country'
+  ];
+
+  for (const service of services) {
+    try {
+      const response = await fetch(service, {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json'
+        }
+      });
+      
+      if (response.ok) {
+        if (service === 'https://api.country.is/') {
+          const data = await response.json();
+          return data.country;
+        } else if (service === 'https://ipapi.co/country/') {
+          const countryCode = await response.text();
+          return countryCode.trim();
+        } else if (service === 'https://ipinfo.io/country') {
+          const countryCode = await response.text();
+          return countryCode.trim();
+        }
+      }
+    } catch (error) {
+      console.warn(`IP detection service ${service} failed:`, error);
+      continue; // Try next service
+    }
   }
+  
+  console.warn('All IP detection services failed, falling back to browser language');
+  return null;
 };
 
 // Function to detect browser language
@@ -31,43 +60,51 @@ const detectBrowserLanguage = () => {
   return browserLang.toLowerCase().split('-')[0]; // 'en-US' -> 'en'
 };
 
-// Function to determine best language based on IP + browser
+// Function to determine best language based on browser + optional IP
 const determineBestLanguage = async (availableLanguages) => {
   const browserLang = detectBrowserLanguage();
-  const userCountry = await detectUserCountry();
   
   // Language priority mapping based on country
   const countryLanguageMap = {
-    'PH': 'tl', // Philippines -> Tagalog (IP priority)
+    'PH': 'tl', // Philippines -> Tagalog
     'DE': 'de', // Germany -> German
     'AT': 'de', // Austria -> German
-    'CH': 'de', // Switzerland -> German
+    'CH': 'de', // Switzerland -> German (assuming German-speaking region)
   };
-  
-  // Check if we have a country-specific language preference
-  const countryPreferredLang = countryLanguageMap[userCountry];
   
   // Get available language codes
   const availableCodes = availableLanguages.map(lang => lang.code);
   
+  // Try to detect country (but don't block on it)
+  let userCountry = null;
+  try {
+    userCountry = await Promise.race([
+      detectUserCountry(),
+      new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), 3000))
+    ]);
+  } catch (error) {
+    console.warn('Country detection failed or timed out:', error);
+  }
+  
   // Priority logic:
-  // 1. For Philippines: Prefer Tagalog regardless of browser language
-  // 2. For Germany/Austria: Check browser first, then country
-  // 3. For others: Use browser language if available
-  
-  if (userCountry === 'PH' && availableCodes.includes('tl')) {
-    return 'tl'; // Tagalog for Philippines
-  }
-  
+  // 1. Check browser language first (most reliable)
   if (availableCodes.includes(browserLang)) {
-    return browserLang; // Browser language if available
+    // Special case: For Philippines, prefer Tagalog even if browser is English
+    if (userCountry === 'PH' && availableCodes.includes('tl')) {
+      return 'tl';
+    }
+    return browserLang;
   }
   
-  if (countryPreferredLang && availableCodes.includes(countryPreferredLang)) {
-    return countryPreferredLang; // Country preference
+  // 2. If browser language not available, try country-based language
+  if (userCountry) {
+    const countryPreferredLang = countryLanguageMap[userCountry];
+    if (countryPreferredLang && availableCodes.includes(countryPreferredLang)) {
+      return countryPreferredLang;
+    }
   }
   
-  // Default to primary language (usually English)
+  // 3. Fall back to primary language (usually English)
   const primaryLang = availableLanguages.find(lang => lang.is_primary);
   return primaryLang ? primaryLang.code : 'en';
 };
@@ -89,19 +126,28 @@ export const I18nProvider = ({ children }) => {
         
         setAvailableLanguages(languages);
         
-        // Determine best language for user
+        // Determine best language for user (non-blocking)
         const bestLanguage = await determineBestLanguage(languages);
         setCurrentLanguage(bestLanguage);
         
       } catch (error) {
         console.error('Failed to fetch languages:', error);
         // Fallback to basic setup
-        setAvailableLanguages([
+        const fallbackLanguages = [
           { code: 'en', name: 'English', native_name: 'English', flag_emoji: '🇺🇸', is_primary: true },
           { code: 'de', name: 'German', native_name: 'Deutsch', flag_emoji: '🇩🇪', is_primary: false },
           { code: 'tl', name: 'Tagalog', native_name: 'Tagalog', flag_emoji: '🇵🇭', is_primary: false }
-        ]);
-        setCurrentLanguage('en');
+        ];
+        setAvailableLanguages(fallbackLanguages);
+        
+        // Even with fallback, try to determine best language
+        try {
+          const bestLanguage = await determineBestLanguage(fallbackLanguages);
+          setCurrentLanguage(bestLanguage);
+        } catch (langError) {
+          console.warn('Language detection failed, using English:', langError);
+          setCurrentLanguage('en');
+        }
       } finally {
         setIsLoading(false);
       }
@@ -113,8 +159,26 @@ export const I18nProvider = ({ children }) => {
   const setLanguage = (langCode) => {
     if (availableLanguages.some(lang => lang.code === langCode)) {
       setCurrentLanguage(langCode);
+      // Optional: Save to localStorage for persistence
+      try {
+        localStorage.setItem('preferred-language', langCode);
+      } catch (error) {
+        console.warn('Could not save language preference:', error);
+      }
     }
   };
+
+  // Check for saved language preference on load
+  useEffect(() => {
+    try {
+      const savedLanguage = localStorage.getItem('preferred-language');
+      if (savedLanguage && availableLanguages.some(lang => lang.code === savedLanguage)) {
+        setCurrentLanguage(savedLanguage);
+      }
+    } catch (error) {
+      console.warn('Could not read language preference:', error);
+    }
+  }, [availableLanguages]);
 
   // Translation function for static UI text
   const t = (key) => {
