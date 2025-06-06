@@ -40,14 +40,14 @@ const Projects = () => {
         
       } catch (err) {
         console.error('Failed to fetch projects:', err);
-        setError('Failed to load projects. Please try again later.');
+        setError(t('projects.failedToLoad'));
       } finally {
         setIsLoading(false);
       }
     };
 
     fetchProjects();
-  }, [apiCall, langLoading]);
+  }, [apiCall, langLoading, t]);
 
   // Filter projects whenever filters change
   useEffect(() => {
@@ -89,8 +89,8 @@ const Projects = () => {
       <div className="projects-page">
         <div className="container">
           <div className="projects-header">
-            <h1>My Projects</h1>
-            <p>Loading projects...</p>
+            <h1>{t('projects.title')}</h1>
+            <p>{t('projects.loadingProjects')}</p>
           </div>
           <div className="projects-grid">
             {[1, 2, 3, 4, 5, 6].map(i => (
@@ -109,7 +109,7 @@ const Projects = () => {
       <div className="projects-page">
         <div className="container">
           <div className="projects-header">
-            <h1>My Projects</h1>
+            <h1>{t('projects.title')}</h1>
             <p className="error-message">{error}</p>
           </div>
         </div>
@@ -122,9 +122,9 @@ const Projects = () => {
       <div className="container">
         {/* Header Section */}
         <div className="projects-header">
-          <h1>My Projects</h1>
+          <h1>{t('projects.title')}</h1>
           <p className="projects-subtitle">
-            A showcase of my work in backend development, data management, and full-stack solutions
+            {t('projects.subtitle')}
           </p>
         </div>
 
@@ -135,7 +135,7 @@ const Projects = () => {
             <div className="search-box">
               <input
                 type="text"
-                placeholder="Search projects..."
+                placeholder={t('projects.searchPlaceholder')}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="search-input"
@@ -145,13 +145,13 @@ const Projects = () => {
 
             {/* Category Filter */}
             <div className="filter-group">
-              <label>Category:</label>
+              <label>{t('projects.category')}:</label>
               <select
                 value={selectedCategory}
                 onChange={(e) => setSelectedCategory(e.target.value)}
                 className="filter-select"
               >
-                <option value="all">All Categories</option>
+                <option value="all">{t('projects.allCategories')}</option>
                 {categories.map(category => (
                   <option key={category} value={category}>
                     {category.charAt(0).toUpperCase() + category.slice(1)}
@@ -162,13 +162,13 @@ const Projects = () => {
 
             {/* Technology Filter */}
             <div className="filter-group">
-              <label>Technology:</label>
+              <label>{t('projects.technology')}:</label>
               <select
                 value={selectedTech}
                 onChange={(e) => setSelectedTech(e.target.value)}
                 className="filter-select"
               >
-                <option value="all">All Technologies</option>
+                <option value="all">{t('projects.allTechnologies')}</option>
                 {technologies.map(tech => (
                   <option key={tech} value={tech}>{tech}</option>
                 ))}
@@ -177,23 +177,23 @@ const Projects = () => {
 
             {/* Reset Filters */}
             <button onClick={resetFilters} className="reset-filters-btn">
-              Reset Filters
+              {t('projects.resetFilters')}
             </button>
           </div>
 
           {/* Results Count */}
           <div className="results-info">
-            Showing {filteredProjects.length} of {projects.length} projects
+            {t('projects.showingResults').replace('{count}', filteredProjects.length).replace('{total}', projects.length)}
           </div>
         </div>
 
         {/* Projects Grid */}
         {filteredProjects.length === 0 ? (
           <div className="no-projects">
-            <h3>No projects found</h3>
-            <p>Try adjusting your filters or search terms.</p>
+            <h3>{t('projects.noProjectsFound')}</h3>
+            <p>{t('projects.tryAdjustingFilters')}</p>
             <button onClick={resetFilters} className="reset-btn">
-              Show All Projects
+              {t('projects.showAllProjects')}
             </button>
           </div>
         ) : (
@@ -210,6 +210,7 @@ const Projects = () => {
 
 // Enhanced Project Card Component
 const ProjectCard = ({ project }) => {
+  const { t } = useI18n();
   const [imageError, setImageError] = useState(false);
 
   const handleImageError = () => {
@@ -218,10 +219,10 @@ const ProjectCard = ({ project }) => {
 
   const getStatusBadge = (status) => {
     const statusMap = {
-      'completed': { text: 'Completed', class: 'status-completed' },
-      'in-progress': { text: 'In Progress', class: 'status-in-progress' },
-      'planning': { text: 'Planning', class: 'status-planning' },
-      'on-hold': { text: 'On Hold', class: 'status-on-hold' }
+      'completed': { text: t('projects.status.completed'), class: 'status-completed' },
+      'in-progress': { text: t('projects.status.inProgress'), class: 'status-in-progress' },
+      'planning': { text: t('projects.status.planning'), class: 'status-planning' },
+      'on-hold': { text: t('projects.status.onHold'), class: 'status-on-hold' }
     };
     
     return statusMap[status] || { text: status, class: 'status-default' };
@@ -286,12 +287,12 @@ const ProjectCard = ({ project }) => {
         <div className="project-details">
           {project.start_date && (
             <span className="project-date">
-              Started: {formatDate(project.start_date)}
+              {t('projects.started')}: {formatDate(project.start_date)}
             </span>
           )}
           {project.end_date && (
             <span className="project-date">
-              Completed: {formatDate(project.end_date)}
+              {t('projects.completed')}: {formatDate(project.end_date)}
             </span>
           )}
         </div>
@@ -306,7 +307,7 @@ const ProjectCard = ({ project }) => {
               className="project-btn primary"
             >
               <span className="btn-icon">🚀</span>
-              View Live
+              {t('projects.viewLive')}
             </a>
           )}
           {project.github_url && (
@@ -317,7 +318,7 @@ const ProjectCard = ({ project }) => {
               className="project-btn secondary"
             >
               <span className="btn-icon">📂</span>
-              View Code
+              {t('projects.viewCode')}
             </a>
           )}
           {project.case_study_url && (
@@ -328,7 +329,7 @@ const ProjectCard = ({ project }) => {
               className="project-btn tertiary"
             >
               <span className="btn-icon">📖</span>
-              Case Study
+              {t('projects.caseStudy')}
             </a>
           )}
         </div>

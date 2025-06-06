@@ -1,12 +1,12 @@
 // src/translations/index.js
 import en from './en';
 import de from './de';
-import tl from './tl';
+import ph from './ph';
 
 const translations = {
   en,
   de,
-  tl
+  ph
 };
 
 export default translations;
