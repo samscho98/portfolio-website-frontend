@@ -17,7 +17,6 @@ const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://portfolio-api-v93
 // Function to detect user's country via IP (with fallback)
 const detectUserCountry = async () => {
   try {
-    // Use ipapi.co free tier (no signup required)
     const response = await fetch('https://ipapi.co/json/', {
       method: 'GET',
       headers: {
@@ -30,11 +29,9 @@ const detectUserCountry = async () => {
       const data = await response.json();
       return data.country_code;
     } else {
-      console.warn('ipapi.co returned non-200 status:', response.status);
       return null;
     }
   } catch (error) {
-    console.warn('IP detection failed:', error);
     return null;
   }
 };
@@ -55,7 +52,9 @@ const determineBestLanguage = async (availableLanguages) => {
     'DE': 'de', // Germany -> German
     'AT': 'de', // Austria -> German
     'CH': 'de', // Switzerland -> German (assuming German-speaking region)
+    'BE': 'nl', // Belgium -> Dutch (Flemish)
   };
+  
   
   // Get available language codes
   const availableCodes = availableLanguages.map(lang => lang.code);
@@ -68,7 +67,7 @@ const determineBestLanguage = async (availableLanguages) => {
       new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), 3000))
     ]);
   } catch (error) {
-    console.warn('Country detection failed or timed out:', error);
+    // Silent fallback - no console noise
   }
   
   // Priority logic:
