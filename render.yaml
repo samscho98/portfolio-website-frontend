@@ -9,10 +9,3 @@ services:
         value: https://portfolio-api-v936.onrender.com/api
     domains:
       - schonenberg.dev
-    routes:
-      - type: rewrite
-        source: /static/*
-        destination: /static/$1
-      - type: rewrite
-        source: /*
-        destination: /index.html
