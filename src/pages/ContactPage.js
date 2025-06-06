@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useI18n } from '../contexts/I18nContext';
 
 const ContactPage = () => {
-  const { t, apiCall } = useI18n();
+  const { t } = useI18n();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -127,7 +127,7 @@ const ContactPage = () => {
         form_fill_time: formFillTime,
         user_agent: navigator.userAgent,
         timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-        screen_resolution: `${screen.width}x${screen.height}`,
+        screen_resolution: `${window.screen.width}x${window.screen.height}`,
         timestamp: new Date().toISOString()
       };
       
